@@ -42,7 +42,7 @@ public class GameMaker {
 		log.info("Game Loaded");
 		guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		guiFrame.setTitle("Game Maker by Team7 for A7");
+		guiFrame.setTitle("Game Maker by Team7 for A8");
 		guiFrame.getRootPane().setDoubleBuffered(true);
 		guiFrame.setSize(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
 		controlPanel = new ControlPanel();
