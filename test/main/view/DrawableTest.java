@@ -1,4 +1,4 @@
-package main.view;
+/*package main.view;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -164,3 +164,4 @@ public class DrawableTest extends UISpec4J{
 		}
 
 }
+*/
