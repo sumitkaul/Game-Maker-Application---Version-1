@@ -86,8 +86,8 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 		this.y = y;
 		this.vx = 0;
 		this.vy = 0;
-		//this.image = (Image)Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(file));
-		this.image = new ImageIcon(this.getClass().getResource(file)).getImage();
+		this.image = (Image)Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(file));
+		//this.image = new ImageIcon(this.getClass().getResource(file)).getImage();
 		
 		imageFilePath = file;
 		this.id = ++Constants.ID;
