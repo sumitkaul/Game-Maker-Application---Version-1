@@ -67,10 +67,27 @@ public class ImageFrame extends JFrame {
 //		type.setFocusable(true);
 		name= new JTextField("",10);
 		name.setFocusable(true);
-		/// Reading from utility
-		//JarReader reader = new JarReader();
-		//reader.setZipStream("images.jar");
-		list = ImageRepo.getInstance().getImageNameList();
+		
+		list = new ArrayList<String>();
+
+		ZipInputStream zip;
+		try {
+			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
+			log.debug("enterrrrrrr");
+			ZipEntry ze = null;
+
+			 while((ze = zip.getNextEntry()) != null) {
+			        String entryName = ze.getName();
+			        log.debug("entryName="+entryName);
+			        if(entryName.endsWith(".png") ) {
+			            list.add(entryName);
+			        }
+		    }
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		//list = ImageRepo.getInstance().getImageNameList();
 
 	    JPanel namePanel = new JPanel(new GridLayout(5,1));
 	    namePanel.add(new JLabel("Object Name: "));
@@ -84,9 +101,9 @@ public class ImageFrame extends JFrame {
 	    //panel.add(layerBox,"wrap");
 	   // File currentDirectory = null;
 	    for (int i = 0; i < list.size(); i++) {
-	    	final String imagePath = ImageRepo.getInstance().getImagePath(list.get(i));
+	    	final String imagePath = (list.get(i));
 	   	 	log.info("The image is " + imagePath);
-	        final Image image = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
+	   	 final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(50, 50, 1));
 			final JLabel iconimage = new JLabel(icon);
 			iconimage.setToolTipText(list.get(i));
