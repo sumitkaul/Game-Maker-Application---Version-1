@@ -8,7 +8,7 @@ public class CreateObjectAction implements IAction {
 	public CreateObjectAction(Drawable childObject){
 		this.setChildObject(childObject);
 	}
-	public void act(Drawable drawable){
+	public void act(Drawable drawable) {
 		
 	}
 	public Drawable getChildObject() {
