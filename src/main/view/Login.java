@@ -20,10 +20,12 @@ import javax.swing.WindowConstants;
 
 import main.controller.GameMaker;
 
-import com.sun.xml.internal.ws.api.server.Container;
-
 public class Login extends JFrame
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	// Variables declaration
 	private JLabel jLabel1;
 	private JLabel jLabel2;
@@ -142,7 +144,7 @@ public class Login extends JFrame
 	private void jButton1_actionPerformed(ActionEvent e)
 	{
 		String username = new String(jTextField1.getText());
-		String password = new String(jPasswordField1.getText());
+		String password = new String(jPasswordField1.getPassword());
 		
 		if(username.equals("") || password.equals("")) // If password and username is empty > Do this >>>
 				{
