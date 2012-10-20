@@ -76,4 +76,26 @@ public class DBConnector {
 		}
 		return null;
 	}
+	
+	public static void main(String args[]) {
+		Connection connection = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			 
+			connection = DriverManager.getConnection(
+					"jdbc:mysql://tintin.cs.indiana.edu:8099/a8team7db","team7", "password01");
+			
+			PreparedStatement userSelect = connection.prepareStatement("select * from user");
+			ResultSet rs = userSelect.executeQuery();
+			while(rs.next()) {
+				String username = rs.getString("uname");
+				String password = rs.getString("password");
+				//userMap.pu
+				log.info("Username is "+username);
+				log.info("Pwd is "+password);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
