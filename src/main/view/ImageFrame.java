@@ -68,6 +68,9 @@ public class ImageFrame extends JFrame {
 		name= new JTextField("",10);
 		name.setFocusable(true);
 		
+		panel.setFocusable(true);
+		GameBoard.getGameBoard().setFocusable(false);
+		
 		list = new ArrayList<String>();
 
 		ZipInputStream zip;
