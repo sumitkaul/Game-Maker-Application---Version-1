@@ -1,24 +1,21 @@
-/*package main.view;
+package main.view;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
-import java.io.File;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import main.controller.GameMaker;
 import main.model.Drawable;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.uispec4j.UISpec4J;
-import org.uispec4j.interception.MainClassAdapter;
 
 public class DrawableTest extends UISpec4J{
 	
@@ -28,9 +25,9 @@ public class DrawableTest extends UISpec4J{
 
 	@Before
 	public void setUp() throws Exception {
-		new MainClassAdapter(GameMaker.class, new String[0]);
-		imgPath = "/images/brick.png";
-		img = new ImageIcon(this.getClass().getResource(imgPath)).getImage();
+		//new MainClassAdapter(GameMaker.class, new String[0]);
+		imgPath = "images/brick.png";
+		img = (Image)Toolkit.getDefaultToolkit().getImage(this.getClass().getClassLoader().getResource(imgPath));
 		drawable = new Drawable( 10 , 10, imgPath);
 		drawable.setImage(img);
 	}
@@ -90,7 +87,7 @@ public class DrawableTest extends UISpec4J{
 
 	@Test
 	public void testDrawableIntIntImage() throws IOException {
-		img = new ImageIcon(this.getClass().getResource(imgPath)).getImage();
+		img = (Image)Toolkit.getDefaultToolkit().getImage(this.getClass().getClassLoader().getResource(imgPath));
 		Drawable drawable1 = new Drawable( 10 , 10, imgPath);
 		assertNotNull(drawable1);
 	}
@@ -164,4 +161,3 @@ public class DrawableTest extends UISpec4J{
 		}
 
 }
-*/
