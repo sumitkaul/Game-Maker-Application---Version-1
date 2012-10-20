@@ -17,5 +17,8 @@
 	<classpathentry kind="lib" path="lib/uispec4j-2.4-jdk16.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.4.3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/images.jar"/>
+	<classpathentry kind="lib" path="lib/background.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.22-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
