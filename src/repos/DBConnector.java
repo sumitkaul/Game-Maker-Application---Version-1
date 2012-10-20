@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package repos;
 
 import java.sql.Connection;
