@@ -68,6 +68,9 @@ public class ImageFrame extends JFrame {
 		name= new JTextField("",10);
 		name.setFocusable(true);
 		
+		panel.setFocusable(true);
+		GameBoard.getGameBoard().setFocusable(false);
+		
 		list = new ArrayList<String>();
 
 		ZipInputStream zip;
@@ -79,7 +82,7 @@ public class ImageFrame extends JFrame {
 			 while((ze = zip.getNextEntry()) != null) {
 			        String entryName = ze.getName();
 			        log.debug("entryName="+entryName);
-			        if(entryName.endsWith(".png") ) {
+			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
 			            list.add(entryName);
 			        }
 		    }

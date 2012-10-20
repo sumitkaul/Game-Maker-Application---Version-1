@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -57,18 +59,33 @@ public class BackGroundImage extends JFrame {
 		scrollBar = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
 		/// Reading from utility
 //		JarReader reader = new JarReader();
-//		reader.setZipStream("background.jar");
-//		list = reader.getAllEntries();
-		list = BackGroundRepo.getInstance().getImageNameList();
+	//	reader.setZipStream("background.jar");
+		//list = reader.getAllEntries();
+		//list = BackGroundRepo.getInstance().getImageNameList();
+		list = new ArrayList<String>();
 
+		ZipInputStream zip;
+		try {
+			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("background.jar")));
+			ZipEntry ze = null;
+
+			 while((ze = zip.getNextEntry()) != null) {
+			        String entryName = ze.getName();
+			        log.debug("entryName="+entryName);
+			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
+			            list.add(entryName);
+			        }
+		    }
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 
 	    JPanel imagePanel = new JPanel(new GridLayout(5,5));
 	    for (int i = 0; i < list.size(); i++) {
-	    	final String imagePath = BackGroundRepo.getInstance().getImagePath(list.get(i));
-	    	log.info("the image path is " + imagePath);
-	   	 	log.info("The image is " + getClass().getResource(imagePath));
-	   	 	final Image image = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
-	   	 	
+	    	final String imagePath = (list.get(i));
+	   	 	log.info("The image is " + imagePath);
+	   	 final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
 	   	 	
 	   	 	//final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(50, 50, 1));
@@ -136,19 +153,23 @@ public class BackGroundImage extends JFrame {
 //		JarReader reader = new JarReader();
 //		reader.setZipStream("background.jar");
 //		log.info("the background is " + fileName);
-		//Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(fileName));
+		Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(fileName));
 		
-		Image image =  new ImageIcon(this.getClass().getResource(fileName)).getImage();
+		//Image image =  new ImageIcon(this.getClass().getResource(fileName)).getImage();
 		ImageConverter converter = new ImageConverter();
 		myPicture = converter.toBufferedImage(image);
 		//myPicture =ImageIO.read(new File(getClass().getClassLoader().getResource(reader.getFileEntry(fileName)).toString()));
+		GameBoard gameboard = GameBoard.getGameBoard();
+		if(picLabel!=null)
+			gameboard.remove(picLabel);
+		
 		picLabel = new JLabel(new ImageIcon( myPicture ));
 		//return picLabel;
 		//return null;
 		setPicLabel(picLabel);
 		
 		//picLabel = backGroundImage.getPicLabel();
-		GameBoard gameboard = GameBoard.getGameBoard();
+		
 		gameboard.add(picLabel);
 		gameboard.invalidate();
 		gameboard.validate();

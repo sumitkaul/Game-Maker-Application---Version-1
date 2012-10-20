@@ -243,12 +243,13 @@ public class ListPanel {
 			Object[] selected = addedSpriteList.getSelectedValues();
 			clearAddedSpriteSelected();
 			for (int i = 0;i<selected.length ; i++) {
-				ListItem item = (ListItem) selected[i];
+				String item = (String) selected[i];
 				List<GameObject> list = new ArrayList<GameObject>();
 				list.addAll(compositeClass.getChildObjects());
-				for(GameObject sprite : list) {
-					if(sprite.getId()==item.getSpriteId()) {
-						compositeClass.remove(sprite);
+				for(GameObject obj : list) {
+					if(obj.getName().equals(item)) {
+						compositeClass.remove(obj);
+						break;
 					}
 				}
 			}
