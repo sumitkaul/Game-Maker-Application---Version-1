@@ -379,7 +379,7 @@ ItemListener {
 
 	@Override
 	public void itemStateChanged(ItemEvent event) {
-
+		log.info("Inside itemStateChangeddddddddddddddddddd " );
 		Object source = event.getItemSelectable();
 
 		if (source == checkStickCollision) {

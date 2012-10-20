@@ -1,4 +1,4 @@
-package main.view;
+/*package main.view;
 
 import static org.junit.Assert.*;
 
@@ -31,3 +31,4 @@ public class BackGroundImageTest extends UISpec4J{
 	}
 
 }
+*/

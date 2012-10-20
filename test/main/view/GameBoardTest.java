@@ -1,4 +1,4 @@
-package main.view;
+/*package main.view;
 
 import static org.junit.Assert.*;
 
@@ -17,11 +17,13 @@ import org.uispec4j.interception.MainClassAdapter;
 public class GameBoardTest extends UISpec4J{
 	
 	private GameBoard gameBoard ;
+	private Login login;
 
 	@Before
 	public void setUp() throws Exception {
 		
 		new MainClassAdapter(GameMaker.class, new String[0]);
+		login=new Login();
 		gameBoard  = new GameBoard();
 	}
 
@@ -90,3 +92,4 @@ public class GameBoardTest extends UISpec4J{
 	
 
 }
+*/

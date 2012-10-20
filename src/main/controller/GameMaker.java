@@ -9,6 +9,8 @@ import main.model.Constants;
 import main.view.Board;
 import main.view.ControlPanel;
 import main.view.GameBoard;
+import main.view.Login;
+
 import org.apache.log4j.Logger;
 
 /** @param board
@@ -34,12 +36,13 @@ public class GameMaker {
 	private Board controlPanel;
 	private Board gameBoard;
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new GameMaker();
-	}
+	}*/
 
 	public GameMaker() {
 		log.info("Game Loaded");
+		//new Login();
 		guiFrame = new JFrame();
 		guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		guiFrame.setTitle("Game Maker by Team7 for A8");
@@ -72,6 +75,7 @@ public class GameMaker {
 				splitPane.setDividerLocation(Constants.BOARD_WIDTH);
 			}
 		});
+		//guiFrame.setVisible(false);
 	}
-
+	
 }

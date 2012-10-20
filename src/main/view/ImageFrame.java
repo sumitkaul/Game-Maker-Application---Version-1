@@ -79,7 +79,7 @@ public class ImageFrame extends JFrame {
 			 while((ze = zip.getNextEntry()) != null) {
 			        String entryName = ze.getName();
 			        log.debug("entryName="+entryName);
-			        if(entryName.endsWith(".png") ) {
+			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
 			            list.add(entryName);
 			        }
 		    }
