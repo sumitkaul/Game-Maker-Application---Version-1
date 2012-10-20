@@ -3,13 +3,14 @@ package main.controller;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+
 import main.model.Constants;
 import main.view.Board;
 import main.view.ControlPanel;
 import main.view.GameBoard;
-import main.view.Login;
 
 import org.apache.log4j.Logger;
 

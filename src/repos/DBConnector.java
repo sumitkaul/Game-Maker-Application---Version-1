@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,61 +19,51 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 public class DBConnector {
 	
 	private transient static Logger log = Logger.getLogger(DBConnector.class);
-
-	public boolean userExists(String username, String password) {
-		
-		Connection connection = null;
+	private Connection connection;
+	
+	public DBConnector() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			 
 			connection = DriverManager.getConnection(
 					"jdbc:mysql://tintin.cs.indiana.edu:8099/a8team7db","team7", "password01");
-			
+		} catch (Exception e) {
+			log.error(e);
+		}
+	}
+
+	public boolean isUserExists(String username, String password) {
+		try {
 			PreparedStatement userSelect = connection.prepareStatement("select * from user where uname=? and password=?");
 			userSelect.setString(1, username);
 			userSelect.setString(2, password);
 			ResultSet rs = userSelect.executeQuery();
-			//HashMap<String, String> userMap = new HashMap<String, String>();
 			if(rs.next()) {
+				log.info("User exists in DB");
 				return true;
 			}
-/*			while(rs.next()) {
-				username = rs.getString("uname");
-				password = rs.getString("password");
-				//userMap.pu
-				log.info(username);
-			}*/
-		
-		} catch(Exception e) {
-			e.printStackTrace();
+			log.info("User not found in DB !");
+		} catch(SQLException e) {
+			log.error(e);
 		}
 		return false;
 	}
 	
 	public List<MakerState> getSavedGames(String username, String password) {
-		Connection connection = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			 
-			connection = DriverManager.getConnection(
-					"jdbc:mysql://tintin.cs.indiana.edu:8099/a8team7db","team7", "password01");
-			
+		try {			
 			PreparedStatement userSelect = connection.prepareStatement("select * from game where uname=? and password=?");
 			userSelect.setString(1, username);
 			userSelect.setString(2, password);
 			ResultSet rs = userSelect.executeQuery();
 			List<MakerState> savedGames = new ArrayList<MakerState>();
+			log.info("Retreiving "+username+"'s saved games");
 			while(rs.next()) {
 				XStream reader = new XStream(new StaxDriver());
 		        MakerState makerState = (MakerState) reader.fromXML(rs.getString("game"));
 		        savedGames.add(makerState);
-				//password = rs.getString("password");
-				//userMap.pu
-				log.info(username);
 			}
 			return savedGames;
-		} catch(Exception e) {
-			e.printStackTrace();
+		} catch(SQLException e) {
+			log.error(e);
 		}
 		return null;
 	}
@@ -90,12 +81,11 @@ public class DBConnector {
 			while(rs.next()) {
 				String username = rs.getString("uname");
 				String password = rs.getString("password");
-				//userMap.pu
 				log.info("Username is "+username);
 				log.info("Pwd is "+password);
 			}
 		} catch(Exception e) {
-			e.printStackTrace();
+			log.error(e);
 		}
 	}
 }

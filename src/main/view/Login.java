@@ -24,35 +24,37 @@ import repos.DBConnector;
 
 import main.controller.GameMaker;
 
-public class Login extends JFrame {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class Login {
+	
+	private JFrame loginFrame;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JTextField usernameText;
 	private JPasswordField passwordText;
 	private JButton loginButton;
+	private JButton signupButton;
 	private JPanel contentPane;
+	private DBConnector db;
 
 	public static void main(String[] args) {
 		new Login();
 	}
 
 	public Login() {
-		super();
+		db = new DBConnector();
 		create();
-		this.setVisible(true);
+		loginFrame.setVisible(true);
 	}
 
 	private void create() {
+		loginFrame = new JFrame();
 		usernameLabel = new JLabel();
 		passwordLabel = new JLabel();
 		usernameText = new JTextField();
 		passwordText = new JPasswordField();
 		loginButton = new JButton();
-		contentPane = (JPanel) this.getContentPane();
+		signupButton = new JButton();
+		contentPane = new JPanel();
 
 		usernameLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		usernameLabel.setForeground(new Color(0, 0, 255));
@@ -105,6 +107,15 @@ public class Login extends JFrame {
 				login_check();
 			}
 		});
+		
+		signupButton.setBackground(new Color(204, 204, 204));
+		signupButton.setForeground(new Color(0, 0, 255));
+		signupButton.setText("Signup");
+		signupButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Yet to be Implemented !");
+			}
+		});
 
 		contentPane.setLayout(null);
 		contentPane.setBorder(BorderFactory.createEtchedBorder());
@@ -113,13 +124,15 @@ public class Login extends JFrame {
 		addComponent(contentPane, passwordLabel, 5, 47, 97, 18);
 		addComponent(contentPane, usernameText, 110, 10, 183, 22);
 		addComponent(contentPane, passwordText, 110, 45, 183, 22);
-		addComponent(contentPane, loginButton, 150, 75, 83, 28);
+		addComponent(contentPane, loginButton, 50, 75, 83, 28);
+		addComponent(contentPane, signupButton, 150, 75, 83, 28);
 
-		this.setTitle("Login");
-		this.setLocation(new Point(500, 300));
-		this.setSize(new Dimension(335, 141));
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		loginFrame.setTitle("Login");
+		loginFrame.setLocation(new Point(500, 300));
+		loginFrame.setSize(new Dimension(335, 141));
+		loginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		loginFrame.setResizable(false);
+		loginFrame.setContentPane(contentPane);
 	}
 
 	/** Add Component Without a Layout Manager (Absolute Positioning) */
@@ -140,11 +153,10 @@ public class Login extends JFrame {
 			usernameText.setText("");
 			passwordText.setText("");
 			loginButton.setEnabled(true);
-			this.setVisible(true);
+			loginFrame.setVisible(true);
 		} else {
-			DBConnector db = new DBConnector();
-			if(db.userExists(username, password)) {
-				this.setVisible(false);
+			if(db.isUserExists(username, password)) {
+				loginFrame.setVisible(false);
 				new GameMaker();
 			}
 			else {
@@ -155,7 +167,7 @@ public class Login extends JFrame {
 				usernameText.setText("");
 				passwordText.setText("");
 				loginButton.setEnabled(true);
-				this.setVisible(true);
+				loginFrame.setVisible(true);
 			}		
 		}
 	}

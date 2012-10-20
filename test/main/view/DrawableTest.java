@@ -9,8 +9,6 @@ import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-
 import main.model.Drawable;
 
 import org.junit.Before;
