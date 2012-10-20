@@ -33,4 +33,5 @@ public class Constants {
 	public static final int CHILD_OBJECT_CONFIGURATION_FRAME_WIDTH =200;
 	public static final int CHILD_OBJECT_CONFIGURATION_FRAME_HEIGHT = 400;
 	public static final int ROTATION_AMOUNT = 2;
+	public static final int SCORE_INCR =10;
 }

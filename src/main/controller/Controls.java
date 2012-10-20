@@ -6,7 +6,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
 import main.model.Constants;
 import main.model.MakerState;
@@ -30,6 +32,10 @@ public class Controls implements ActionListener {
     private JButton stop;
     private JButton load;
     private JButton save;
+    
+    private JTextField scoreText;
+	private JLabel scoreLabel;
+	
     private LayoutGrid lg = new LayoutGrid(panel);
     private LayoutFlow lf = new LayoutFlow(panel);
     private Logger log = Logger.getLogger(Controls.class);
@@ -39,17 +45,23 @@ public class Controls implements ActionListener {
     private GameBoard gameBoard;
     
     public Controls() {
-        panel = new JPanel(new GridLayout(1, 4));
+        panel = new JPanel(new GridLayout(3, 2));
         start = new JButton("START");
         stop = new JButton("STOP");
         load = new JButton("LOAD");
         save = new JButton("SAVE");
+        
+        scoreLabel = new JLabel("Score: ");
+        scoreText = new JTextField(5);
         
         panel.add(start);
         panel.add(stop);
         //panel.add(gameList);
         panel.add(load);
         panel.add(save);
+        
+        panel.add(scoreLabel);
+        panel.add(scoreText);
         
         start.addActionListener(this);
         stop.addActionListener(this);
@@ -77,6 +89,14 @@ public class Controls implements ActionListener {
     
     public void setPanel(JPanel panel) {
         this.panel = panel;
+    }
+    
+    public JTextField getScoreText() {
+        return scoreText;
+    }
+
+    public void setScoreText(JTextField scoreText) {
+        this.scoreText = scoreText;
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -131,6 +151,7 @@ public class Controls implements ActionListener {
             gameBoard.draw();
             gameBoard.requestFocus();
             compositeClass.checkObjectCollision();
+            scoreText.setText(new Integer(GameBoard.getGameBoard().getScore()).toString());
         }
     }
     

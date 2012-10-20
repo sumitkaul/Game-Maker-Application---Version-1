@@ -46,6 +46,7 @@ public class GameBoard extends Board implements MouseListener,MouseMotionListene
 	private JMenuItem propertiesMenuItem;
 	private JMenuItem duplicateMenuItem;
 	private MenuHandler menuHandler;
+	private int score=0;
 
 	public static GameBoard getGameBoard(){
 		if(gameBoard == null)
@@ -71,6 +72,14 @@ public class GameBoard extends Board implements MouseListener,MouseMotionListene
 		Constants.BOARD_WIDTH=(int)(0.5*Constants.WINDOW_WIDTH);
 		Constants.BOARD_HEIGHT=(int)(0.95*Constants.WINDOW_HEIGHT);
 		super.setSize(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT);
+	}
+	
+	public int getScore(){
+		return score;
+	}
+	
+	public void setScore(int score){
+		this.score = score;
 	}
 
 	public void paint(Graphics g) {

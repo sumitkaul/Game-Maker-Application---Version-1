@@ -28,7 +28,8 @@ public enum Action {
 	PLAY_SOUND_APPLAUSE("Play Applause Sound"),
 	PLAY_SOUND_GAMEOVER("Play GameOver Sound"),
 	PLAY_SOUND_BRICK("Play Brick Sound"),
-	PLAY_SOUND_BOUNCE("Play Bounce Sound");
+	PLAY_SOUND_BOUNCE("Play Bounce Sound"),
+	SCORE("Add Score");
 
 	private String action;
 	private static final HashMap<String, Action> lookup = new HashMap<String, Action>();
