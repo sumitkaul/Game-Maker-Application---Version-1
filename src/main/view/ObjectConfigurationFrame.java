@@ -60,6 +60,7 @@ ItemListener {
 	private List<JComponent> components;
 
 	private JButton create;
+	private JButton update;
 	private JButton keyboardEventCreate;
 	private JPanel againstObjectPanel;
 	private JPanel soundPanel;
@@ -198,6 +199,11 @@ ItemListener {
 		checkStickCollision.addItemListener(this);
 		create = new JButton("Create");
 		this.addConfigurationItem("Events", create);
+		
+		update = new JButton("Update");
+		update.addActionListener(this);
+		this.addConfigurationItem("", update);
+		
 		JPanel collisionBoxesPanel = new JPanel();
 		collisionBoxesPanel.add(checkBounceCollision);
 		collisionBoxesPanel.add(checkDefelectableCollision);
@@ -327,7 +333,8 @@ ItemListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		if(e.getSource()==create){
+			log.debug("enterrrrrrr"+e.getSource());
 		Event event = (Event) eventSelectionBox.getSelectedItem();
 		Action action = (Action) actionSelectionBox.getSelectedItem();
 		String againstObjectName = (String) againstObjectSelectionBox.getSelectedItem();
@@ -346,6 +353,16 @@ ItemListener {
 
 		GameBoard.getGameBoard().repaint();
 		this.repaint();
+		}
+		
+		if(e.getSource()==update){
+			updateGameObject();
+
+			GameBoard.getGameBoard().repaint();
+			this.repaint();	
+		}
+		
+		
 	}
 
 	private void updateGameObject() {
@@ -379,7 +396,6 @@ ItemListener {
 
 	@Override
 	public void itemStateChanged(ItemEvent event) {
-		log.info("Inside itemStateChangeddddddddddddddddddd " );
 		Object source = event.getItemSelectable();
 
 		if (source == checkStickCollision) {

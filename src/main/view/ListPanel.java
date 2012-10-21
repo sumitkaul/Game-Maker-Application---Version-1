@@ -232,9 +232,11 @@ public class ListPanel {
 			
 			
 		getGameboard().draw();
-		getGameboard().requestFocus();
+		//getGameboard().requestFocus();
 			gameboard.draw();
-			gameboard.requestFocus();
+			//gameboard.requestFocus();
+			panel.setFocusable(true);
+			getGameboard().setFocusable(false);
 		}
 	}
 
