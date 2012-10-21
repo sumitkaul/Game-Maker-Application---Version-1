@@ -5,15 +5,23 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.Timer;
+
 import main.model.Constants;
 import main.model.MakerState;
 import main.view.GameBoard;
+
 import org.apache.log4j.Logger;
-import repos.GameLoadPanel;
-import repos.GameSavePanel;
+
+import repos.DBConnector;
 
 public class Controls implements ActionListener {
     
@@ -30,6 +38,10 @@ public class Controls implements ActionListener {
     private JButton stop;
     private JButton load;
     private JButton save;
+    
+    private JTextField scoreText;
+	private JLabel scoreLabel;
+	
     private LayoutGrid lg = new LayoutGrid(panel);
     private LayoutFlow lf = new LayoutFlow(panel);
     private Logger log = Logger.getLogger(Controls.class);
@@ -37,19 +49,26 @@ public class Controls implements ActionListener {
     private Timer daemon;
     private GameController compositeClass;
     private GameBoard gameBoard;
+    private String gameData;
     
     public Controls() {
-        panel = new JPanel(new GridLayout(1, 4));
+        panel = new JPanel(new GridLayout(3, 2));
         start = new JButton("START");
         stop = new JButton("STOP");
         load = new JButton("LOAD");
         save = new JButton("SAVE");
+        
+        scoreLabel = new JLabel("Score: ");
+        scoreText = new JTextField(5);
         
         panel.add(start);
         panel.add(stop);
         //panel.add(gameList);
         panel.add(load);
         panel.add(save);
+        
+        panel.add(scoreLabel);
+        panel.add(scoreText);
         
         start.addActionListener(this);
         stop.addActionListener(this);
@@ -60,6 +79,7 @@ public class Controls implements ActionListener {
         daemon = new Timer(Constants.TIMER_DELAY, daemonThread);
         compositeClass = GameController.getInstance();
         gameBoard = GameBoard.getGameBoard();
+        gameData = "";
         
     }
     
@@ -79,6 +99,14 @@ public class Controls implements ActionListener {
         this.panel = panel;
     }
     
+    public JTextField getScoreText() {
+        return scoreText;
+    }
+
+    public void setScoreText(JTextField scoreText) {
+        this.scoreText = scoreText;
+    }
+    
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == start) {
             log.info("Start is clicked");
@@ -89,19 +117,60 @@ public class Controls implements ActionListener {
             daemon.stop();
         } else if (e.getSource() == load) {
             log.info("Load button is clicked");
-            
-            GameLoadPanel p = new GameLoadPanel(panel);
-            String gameData = p.readGameDataFromRemoteList();
-            
-            if (gameData == null) {
-                return;
-            }
-            
-            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
-            
-            state.load(gameData, true);
-            
-            gameBoard.draw();
+            final DBConnector db = new DBConnector();
+/*            GameLoadPanel p = new GameLoadPanel(panel);
+            String gameData = p.readGameDataFromRemoteList();*/
+            final JFrame loadFrame = new JFrame("Load Game");
+            JPanel loadPanel = new JPanel(new GridLayout(2,2));
+            loadPanel.add(new JLabel("Pre-Loaded Games :"));
+            final JComboBox preLoadedGamesBox = new JComboBox(db.getPreLoadedGameNames().toArray());
+            preLoadedGamesBox.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					gameData = db.getPreLoadedGame(preLoadedGamesBox.getSelectedItem().toString());
+					if (gameData == null || gameData.isEmpty()) {
+		                return;
+		            }
+					loadFrame.setVisible(false);
+		            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
+		            state.load(gameData, false);
+		            gameBoard.draw();
+				}
+            });
+            loadPanel.add(preLoadedGamesBox);
+            loadPanel.add(new JLabel("User saved Games :"));
+            final JComboBox savedGamesBox = new JComboBox(db.getSavedGameNames().toArray());
+            savedGamesBox.addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					gameData = db.getSavedGame(savedGamesBox.getSelectedItem().toString());
+					if (gameData == null || gameData.isEmpty()) {
+		                return;
+		            }
+					loadFrame.setVisible(false);
+		            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
+		            state.load(gameData, false);
+		            gameBoard.draw();
+				}
+            });
+            loadPanel.add(savedGamesBox);
+            loadFrame.setContentPane(loadPanel);
+            loadFrame.setSize(300, 150);
+            loadFrame.setVisible(true);
+            /*Object[] possibilities = db.getSavedGameNames().toArray();
+	        String chosen = (String) JOptionPane.showInputDialog(
+	                null,
+	                "Select Game from ",
+	                "Load Game",
+	                JOptionPane.PLAIN_MESSAGE,
+	                null, possibilities,
+	                null);
+	
+	        if (chosen == null) {
+	            return;
+	        }
+            gameData = db.getSavedGame(chosen);
+    */        
 
 //            Object[] possibilities = GameRepo.getInstance().getGameNameList().toArray();
 //            String staeString = (String) JOptionPane.showInputDialog(
@@ -118,9 +187,15 @@ public class Controls implements ActionListener {
             log.info("Save button is clicked");
             MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
             String gameData = state.getSaveString();
-            
-            GameSavePanel p = new GameSavePanel(panel);
-            p.saveGameToRemoteServer(gameData);
+            String gameName = JOptionPane.showInputDialog(null, "Please give your game a name:", "Save Game", JOptionPane.PLAIN_MESSAGE);
+            if (gameName == null || gameName.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please type something");
+                return;
+            }
+            DBConnector db = new DBConnector();
+            db.saveGame(GameBoard.getGameBoard().getScore(), gameName, gameData);
+            //GameSavePanel p = new GameSavePanel(panel);
+            //p.saveGameToRemoteServer(gameData);
         }
     }
     
@@ -131,6 +206,7 @@ public class Controls implements ActionListener {
             gameBoard.draw();
             gameBoard.requestFocus();
             compositeClass.checkObjectCollision();
+            scoreText.setText(new Integer(GameBoard.getGameBoard().getScore()).toString());
         }
     }
     

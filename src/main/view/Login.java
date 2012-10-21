@@ -23,6 +23,7 @@ import javax.swing.WindowConstants;
 import repos.DBConnector;
 
 import main.controller.GameMaker;
+import main.model.Constants;
 
 public class Login {
 	
@@ -157,6 +158,7 @@ public class Login {
 			loginFrame.setVisible(true);
 		} else {
 			if(db.isUserExists(username, password)) {
+				Constants.USERNAME = username;
 				loginFrame.setVisible(false);
 				new GameMaker();
 			}

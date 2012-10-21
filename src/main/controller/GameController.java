@@ -8,6 +8,7 @@ import main.actions.PlayAppluseSound;
 import main.actions.PlayBounceSound;
 import main.actions.PlayBrickSound;
 import main.actions.PlayGameOverSound;
+import main.actions.ScoreAction;
 import main.actions.collide.BounceRandomAction;
 import main.actions.collide.CollideBounceAction;
 import main.actions.collide.CollideGameLoseAction;
@@ -153,6 +154,12 @@ public class GameController {
 					PlayGameOverSound bounce = new PlayGameOverSound();
 					bounce.setAgainstObjectName(action.getGameObjectName());
 					bounce.act(item);
+				}
+				if(action.getAction().equals(Action.SCORE)){
+					ScoreAction bounce = new ScoreAction();
+					bounce.setAgainstObjectName(action.getGameObjectName());
+					bounce.act(item);
+					
 				}
 			}
 			

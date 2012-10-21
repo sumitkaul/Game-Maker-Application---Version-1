@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 import main.actions.NormalMoveAction;
 import main.actions.NullMoveAction;
@@ -151,11 +150,21 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 	@Override
 	public void setObjectSize(int windowWidth, int windowHeight) 
 	{
-		this.setWidth((double)img.getWidth()/Constants.INITIAL_WINDOW_WIDTH*windowWidth);
-		this.setHeight((double)img.getHeight()/Constants.INITIAL_WINDOW_HEIGHT*windowHeight);
-//		this.setX((double)this.getX()/Constants.INITIAL_WINDOW_WIDTH*windowWidth + 1.00);
-//		this.setY((double)this.getY()/Constants.INITIAL_WINDOW_HEIGHT*windowHeight + 1.00);
-	
+		this.setX(this.getX()*((double)windowWidth/Constants.PREVIOUS_WINDOW_WIDTH));
+		this.setY(this.getY()*((double)windowHeight/Constants.PREVIOUS_WINDOW_HEIGHT));
+		if(windowWidth>Constants.PREVIOUS_WINDOW_WIDTH && windowHeight<Constants.PREVIOUS_WINDOW_HEIGHT) {
+			this.setWidth((double)this.getWidth()/Constants.PREVIOUS_WINDOW_WIDTH*windowWidth+1);
+			this.setHeight((double)this.getHeight()/Constants.PREVIOUS_WINDOW_HEIGHT*windowHeight);
+		} else if(windowWidth<Constants.PREVIOUS_WINDOW_WIDTH && windowHeight>Constants.PREVIOUS_WINDOW_HEIGHT) {
+			this.setWidth((double)this.getWidth()/Constants.PREVIOUS_WINDOW_WIDTH*windowWidth);
+			this.setHeight((double)this.getHeight()/Constants.PREVIOUS_WINDOW_HEIGHT*windowHeight+1);
+		} else if(windowWidth>Constants.PREVIOUS_WINDOW_WIDTH && windowHeight>Constants.PREVIOUS_WINDOW_HEIGHT) {
+			this.setWidth((double)this.getWidth()/Constants.PREVIOUS_WINDOW_WIDTH*windowWidth+1);
+			this.setHeight((double)this.getHeight()/Constants.PREVIOUS_WINDOW_HEIGHT*windowHeight+1);
+		} else {
+			this.setWidth((double)this.getWidth()/Constants.PREVIOUS_WINDOW_WIDTH*windowWidth);
+			this.setHeight((double)this.getHeight()/Constants.PREVIOUS_WINDOW_HEIGHT*windowHeight);
+		}
 	}
 
 	public File getFile() {

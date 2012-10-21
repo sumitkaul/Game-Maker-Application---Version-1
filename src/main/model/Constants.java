@@ -9,6 +9,8 @@ public class Constants {
 
 	public static int INITIAL_WINDOW_WIDTH = 850;
 	public static int INITIAL_WINDOW_HEIGHT = 750;
+	public static int PREVIOUS_WINDOW_WIDTH = 850;
+	public static int PREVIOUS_WINDOW_HEIGHT = 750;
 	public static int WINDOW_WIDTH = 850;
 	public static int WINDOW_HEIGHT = 750;
 	public static int TIMER_DELAY = 10;
@@ -33,4 +35,7 @@ public class Constants {
 	public static final int CHILD_OBJECT_CONFIGURATION_FRAME_WIDTH =200;
 	public static final int CHILD_OBJECT_CONFIGURATION_FRAME_HEIGHT = 400;
 	public static final int ROTATION_AMOUNT = 2;
+	public static final int SCORE_INCR =10;
+	public static String USERNAME = "default";
+	public static String DEFAULT_USER = "default";
 }

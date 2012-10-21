@@ -1,14 +1,18 @@
 package main.model;
 
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
+import java.awt.Toolkit;
 import java.util.List;
-import javax.swing.ImageIcon;
+
 import main.controller.GameController;
 import main.utilities.ImageConverter;
 import main.view.GameBoard;
+
 import org.apache.log4j.Logger;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 public class MakerState {
     
@@ -61,7 +65,8 @@ public class MakerState {
             if (remoteLoad) {
                 gameState = stateSave.readGameFromData(gameNameOrData);
             } else {
-                gameState = stateSave.readGame(gameNameOrData);
+            	XStream reader = new XStream(new StaxDriver());
+                gameState = (MakerState) reader.fromXML(gameNameOrData);
             }
             
             windowSize.setSize(gameState.getWindowSize().height, gameState.getWindowSize().width);
@@ -90,20 +95,14 @@ public class MakerState {
                             log.debug("continue for " + child.getName());
                             continue;
                         }
-                        
-                        ImageIcon imgChild = new ImageIcon(this.getClass().getResource(child.getImageFilePath()));
-                        BufferedImage bImageChild = ImageConverter.toBufferedImage(imgChild.getImage());
-                        child.setImg(bImageChild);
+                        child.setImg(ImageConverter.toBufferedImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(child.getImageFilePath()))));
                     }
                 }
-                ImageIcon img = new ImageIcon(this.getClass().getResource(item.getImageFilePath()));
                 
                 ditem.setKeyActions(item.getKeyActions());
                 ditem.setPressedKey(item.getPressedKey());
                 //ditem.setActionsMap(item.getActions);
-                BufferedImage bImage = ImageConverter.toBufferedImage(img.getImage());
-                //bImage.set
-                ditem.setImg(bImage);
+                ditem.setImg(ImageConverter.toBufferedImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(item.getImageFilePath()))));
             }
         } catch (Exception e) {
             log.error("An exception! Oops!", e);
