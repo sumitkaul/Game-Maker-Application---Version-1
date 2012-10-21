@@ -26,7 +26,7 @@ import main.controller.GameMaker;
 
 public class SignUp {
 	
-	private JFrame loginFrame;
+	private JFrame signupFrame;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	
@@ -54,11 +54,11 @@ public class SignUp {
 	public SignUp() {
 		db = new DBConnector();
 		create();
-		loginFrame.setVisible(true);
+		signupFrame.setVisible(true);
 	}
 
 	private void create() {
-		loginFrame = new JFrame();
+		signupFrame = new JFrame();
 		usernameLabel = new JLabel();
 		passwordLabel = new JLabel(); 
 		
@@ -183,7 +183,16 @@ public class SignUp {
 		signupButton.setText("Signup");
 		signupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Yet to be Implemented connect it wit DB !");
+
+				if(!(usernameText.getText().equalsIgnoreCase("") && passwordText.getText().equalsIgnoreCase("") && emailText.getText().equalsIgnoreCase("") && nameText.getText().equalsIgnoreCase(""))){
+					db.saveSignUp(usernameText.getText(), passwordText.getText(), emailText.getText(), nameText.getText());
+					signupFrame.setVisible(false);
+					Login.getLoginFrame().setVisible(false);
+					new GameMaker();
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Please enter all the values required in order to sign up !");
+				}
 			}
 		});
 
@@ -205,12 +214,12 @@ public class SignUp {
 		//addComponent(contentPane, loginButton, 50, 165, 83, 28);
 		addComponent(contentPane, signupButton, 150, 165, 83, 28);
 
-		loginFrame.setTitle("Sign Up Page");
-		loginFrame.setLocation(new Point(500, 300));
-		loginFrame.setSize(new Dimension(350, 300));
-		loginFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		loginFrame.setResizable(false);
-		loginFrame.setContentPane(contentPane);
+		signupFrame.setTitle("Sign Up Page");
+		signupFrame.setLocation(new Point(500, 300));
+		signupFrame.setSize(new Dimension(350, 300));
+		signupFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		signupFrame.setResizable(false);
+		signupFrame.setContentPane(contentPane);
 	}
 
 	/** Add Component Without a Layout Manager (Absolute Positioning) */
@@ -231,10 +240,10 @@ public class SignUp {
 			usernameText.setText("");
 			passwordText.setText("");
 			loginButton.setEnabled(true);
-			loginFrame.setVisible(true);
+			signupFrame.setVisible(true);
 		} else {
 			if(db.isUserExists(username, password)) {
-				loginFrame.setVisible(false);
+				signupFrame.setVisible(false);
 				new GameMaker();
 			}
 			else {
@@ -245,7 +254,7 @@ public class SignUp {
 				usernameText.setText("");
 				passwordText.setText("");
 				loginButton.setEnabled(true);
-				loginFrame.setVisible(true);
+				signupFrame.setVisible(true);
 			}		
 		}
 	}

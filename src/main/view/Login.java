@@ -27,7 +27,7 @@ import main.model.Constants;
 
 public class Login {
 	
-	private JFrame loginFrame;
+	private static JFrame loginFrame;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JTextField usernameText;
@@ -45,6 +45,10 @@ public class Login {
 		db = new DBConnector();
 		create();
 		loginFrame.setVisible(true);
+	}
+	
+	public static JFrame getLoginFrame(){
+		return loginFrame;
 	}
 
 	private void create() {

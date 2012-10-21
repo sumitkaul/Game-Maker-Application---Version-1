@@ -67,7 +67,7 @@ public class ImageFrame extends JFrame {
 //		type.setFocusable(true);
 		name= new JTextField("",10);
 		name.setFocusable(true);
-		
+		log.debug("entryNameeeeeeeeeeeeeeeeeeeee");
 		panel.setFocusable(true);
 		GameBoard.getGameBoard().setFocusable(false);
 		
@@ -76,7 +76,6 @@ public class ImageFrame extends JFrame {
 		ZipInputStream zip;
 		try {
 			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
-			log.debug("enterrrrrrr");
 			ZipEntry ze = null;
 
 			 while((ze = zip.getNextEntry()) != null) {
