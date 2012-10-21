@@ -37,9 +37,9 @@ public class Login {
 	private JPanel contentPane;
 	private DBConnector db;
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		new Login();
-	}*/
+	}
 
 	public Login() {
 		db = new DBConnector();

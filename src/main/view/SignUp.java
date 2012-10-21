@@ -45,10 +45,10 @@ public class SignUp {
 	private JPanel contentPane;
 	private DBConnector db;
 
-	
+	/*
 	public static void main(String[] args) {
 		new SignUp();
-	}
+	}*/
 
 	
 	public SignUp() {
