@@ -202,7 +202,7 @@ public class SignUp {
 		addComponent(contentPane, emailText, 110, 80, 183, 22);
 		addComponent(contentPane, nameText, 110, 115, 183, 22);
 		
-		addComponent(contentPane, loginButton, 50, 165, 83, 28);
+		//addComponent(contentPane, loginButton, 50, 165, 83, 28);
 		addComponent(contentPane, signupButton, 150, 165, 83, 28);
 
 		loginFrame.setTitle("Sign Up Page");
