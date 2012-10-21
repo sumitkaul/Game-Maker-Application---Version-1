@@ -5,17 +5,22 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+
 import main.model.Constants;
 import main.model.MakerState;
 import main.view.GameBoard;
+
 import org.apache.log4j.Logger;
+
+import repos.DBConnector;
 import repos.GameLoadPanel;
-import repos.GameSavePanel;
 
 public class Controls implements ActionListener {
     
@@ -110,16 +115,29 @@ public class Controls implements ActionListener {
         } else if (e.getSource() == load) {
             log.info("Load button is clicked");
             
-            GameLoadPanel p = new GameLoadPanel(panel);
-            String gameData = p.readGameDataFromRemoteList();
-            
-            if (gameData == null) {
+/*            GameLoadPanel p = new GameLoadPanel(panel);
+            String gameData = p.readGameDataFromRemoteList();*/
+            DBConnector db = new DBConnector();
+            Object[] possibilities = db.getSavedGameNames().toArray();
+	        String chosen = (String) JOptionPane.showInputDialog(
+	                null,
+	                "Select Game from ",
+	                "Load Game",
+	                JOptionPane.PLAIN_MESSAGE,
+	                null, possibilities,
+	                null);
+	
+	        if (chosen == null) {
+	            return;
+	        }
+            String gameData = db.getSavedGame(chosen);
+            if (gameData == null || gameData.isEmpty()) {
                 return;
             }
             
             MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
             
-            state.load(gameData, true);
+            state.load(gameData, false);
             
             gameBoard.draw();
 
@@ -138,9 +156,15 @@ public class Controls implements ActionListener {
             log.info("Save button is clicked");
             MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
             String gameData = state.getSaveString();
-            
-            GameSavePanel p = new GameSavePanel(panel);
-            p.saveGameToRemoteServer(gameData);
+            String gameName = JOptionPane.showInputDialog(null, "Please give your game a name:", "Save Game", JOptionPane.PLAIN_MESSAGE);
+            if (gameName == null || gameName.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please type something");
+                return;
+            }
+            DBConnector db = new DBConnector();
+            db.saveGame(GameBoard.getGameBoard().getScore(), gameName, gameData);
+            //GameSavePanel p = new GameSavePanel(panel);
+            //p.saveGameToRemoteServer(gameData);
         }
     }
     
