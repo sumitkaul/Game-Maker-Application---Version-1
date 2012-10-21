@@ -114,7 +114,8 @@ public class Login {
 		signupButton.setText("Signup");
 		signupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Yet to be Implemented !");
+				SignUp signup=new SignUp();
+				
 			}
 		});
 
