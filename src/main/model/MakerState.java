@@ -6,6 +6,7 @@ import java.util.List;
 
 import main.controller.GameController;
 import main.utilities.ImageConverter;
+import main.view.BackGroundImage;
 import main.view.GameBoard;
 
 import org.apache.log4j.Logger;
@@ -22,12 +23,13 @@ public class MakerState {
     private transient StateSaver stateSave;
     private Dimension windowSize;
     private GameController compositeClass;
-    
-    public MakerState(Dimension windowSize, GameController compositeClass) {
+	private String backgroundImagePath; 
+	
+    public MakerState(Dimension windowSize, GameController compositeClass, String backgroundImagePath) {
         this.windowSize = windowSize;
         this.compositeClass = compositeClass;
-        stateSave = new StateSaver();
-        
+        this.backgroundImagePath = backgroundImagePath;
+		stateSave = new StateSaver();        
     }
     
     public Dimension getWindowSize() {
@@ -46,6 +48,14 @@ public class MakerState {
         this.compositeClass = compositeClass;
     }
     
+	public String getBackgroundImagePath() {
+		return backgroundImagePath;
+	}
+
+	public void setBackgroundImagePath(String backgroundImagePath) {
+		this.backgroundImagePath = backgroundImagePath;
+	}
+
     public void save() {
         try {
             stateSave.write(this);
@@ -76,7 +86,9 @@ public class MakerState {
             }
             GameBoard.getGameBoard().removeAll();
             compositeClass.removeAll();
-            
+			BackGroundImage img = new BackGroundImage();
+			if(gameState.getBackgroundImagePath()!=null && !gameState.getBackgroundImagePath().isEmpty())
+				img.setBackGroundFile(gameState.getBackgroundImagePath());
             compositeClass.add(gameState.getCompositeClass().getChildObjects());
             for (GameObject item : compositeClass.getChildObjects()) {
                 Drawable ditem = (Drawable) item;

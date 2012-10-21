@@ -6,33 +6,22 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 
-import main.controller.GameController;
-import main.model.Constants;
-import main.model.Drawable;
 import main.utilities.ImageConverter;
-import main.utilities.JarReader;
 
 import org.apache.log4j.Logger;
-
-import repos.BackGroundRepo;
-import repos.ImageRepo;
 
 public class BackGroundImage extends JFrame {
 	private Logger log = Logger.getLogger(BackGroundImage.class);
@@ -47,6 +36,10 @@ public class BackGroundImage extends JFrame {
 
 	public void setBackGroundFile(String backGroundFile) {
 		this.backGroundFile = backGroundFile;
+		Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(backGroundFile));
+		
+		myPicture = ImageConverter.toBufferedImage(image);
+		GameBoard.getGameBoard().setBackgroundImage(myPicture);
 	}
 
 	private List<String> list;
@@ -57,11 +50,6 @@ public class BackGroundImage extends JFrame {
 		panel=new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		scrollBar = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-		/// Reading from utility
-//		JarReader reader = new JarReader();
-	//	reader.setZipStream("background.jar");
-		//list = reader.getAllEntries();
-		//list = BackGroundRepo.getInstance().getImageNameList();
 		list = new ArrayList<String>();
 
 		ZipInputStream zip;
@@ -93,26 +81,16 @@ public class BackGroundImage extends JFrame {
 			iconimage.setToolTipText(list.get(i));
 			iconimage.addMouseListener(new MouseAdapter() {
 			      public void mouseClicked(MouseEvent e) {
-			    	  String filename = iconimage.getToolTipText();
-					setBackGroundFile(imagePath);
-					setBackGroundImage(imagePath);
+			    	GameBoard gameboard = GameBoard.getGameBoard();
+					gameboard.setBackgroundImagePath(imagePath);
+					Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
+					
+					myPicture = ImageConverter.toBufferedImage(image);
+					gameboard.setBackgroundImage(myPicture);
 					log.info("the selected filename is filepath");
-					
+					gameboard.repaint();
 					setVisible(false);
-					
-					//Drawable item = new Drawable(Constants.GAMEOBJECT_INTIAL_XVALUE,Constants.GAMEOBJECT_INTIAL_YVALUE, imagePath);
-//						compositeClass = GameController.getInstance();
-//						item.setName(name.getText());
-//						item.setType(type.getText());
-//						
-					
-//					GameController.getInstance().add(item);
-//					ListPanel.getInstance().addAddedSpriteElements(item.getName());
-//					
-//					ListPanel.getInstance().getGameboard().draw();
-//					ObjectConfigurationFrame objFrame = new ObjectConfigurationFrame(item);
-//					objFrame.setEnabled(true);
-//					
+						
 					return;
 			  		
 			        }
@@ -130,51 +108,7 @@ public class BackGroundImage extends JFrame {
 	    setVisible(false);
 	    }
 	    panel.add(imagePanel);
-	    this.add(panel);
-	    //panel.setVisible(true);
-	    
-	   /* layerBox.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent e) {
-		    	  layer = ((String) ((JComboBox) e.getSource()).getSelectedItem());
-		    	  if(layer.equalsIgnoreCase(Constants.NEW_LAYER)) {
-		    		  layer = Layers.getInstance().addNewLayer();
-		    	  }
-		      }
-		 });
-	    */	    
-
-	}
-
-	
-
-	public void setBackGroundImage(String fileName)
-	{
-
-//		JarReader reader = new JarReader();
-//		reader.setZipStream("background.jar");
-//		log.info("the background is " + fileName);
-		Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(fileName));
-		
-		//Image image =  new ImageIcon(this.getClass().getResource(fileName)).getImage();
-		ImageConverter converter = new ImageConverter();
-		myPicture = converter.toBufferedImage(image);
-		//myPicture =ImageIO.read(new File(getClass().getClassLoader().getResource(reader.getFileEntry(fileName)).toString()));
-		GameBoard gameboard = GameBoard.getGameBoard();
-		if(picLabel!=null)
-			gameboard.remove(picLabel);
-		
-		picLabel = new JLabel(new ImageIcon( myPicture ));
-		//return picLabel;
-		//return null;
-		setPicLabel(picLabel);
-		
-		//picLabel = backGroundImage.getPicLabel();
-		
-		gameboard.add(picLabel);
-		gameboard.invalidate();
-		gameboard.validate();
-		gameboard.repaint();
-
+	    this.add(panel);  
 
 	}
 

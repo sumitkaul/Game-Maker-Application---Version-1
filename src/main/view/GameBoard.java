@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +48,25 @@ public class GameBoard extends Board implements MouseListener,MouseMotionListene
 	private JMenuItem duplicateMenuItem;
 	private MenuHandler menuHandler;
 	private int score=0;
+	private BufferedImage backgroundImage;
+    private String backgroundImagePath;
+
+	public String getBackgroundImagePath() {
+		return backgroundImagePath;
+	}
+
+	public void setBackgroundImagePath(String backgroundImagePath) {
+		this.backgroundImagePath = backgroundImagePath;
+	}
+
+	public BufferedImage getBackgroundImage() {
+		return backgroundImage;
+	}
+
+	public void setBackgroundImage(BufferedImage backgroudImage) {
+		this.backgroundImage = backgroudImage;
+	}
+
 
 	public static GameBoard getGameBoard(){
 		if(gameBoard == null)
@@ -92,6 +112,11 @@ public class GameBoard extends Board implements MouseListener,MouseMotionListene
 	}
 	
 	public void drawAllObjects(Graphics g) {
+		if(backgroundImage != null)
+		{
+			Image img= backgroundImage.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_DEFAULT);
+		    g.drawImage(img, 0, 0, null);
+		}
 		ClockDisplay.getInstance().draw(g);
 		for (GameObject compositeObject : GameController.getInstance().getChildObjects()) {
 			Drawable item = (Drawable)compositeObject;
