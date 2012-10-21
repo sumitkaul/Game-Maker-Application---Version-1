@@ -132,7 +132,7 @@ public class Controls implements ActionListener {
 		                return;
 		            }
 					loadFrame.setVisible(false);
-		            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
+		            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass, gameBoard.getBackgroundImagePath());
 		            state.load(gameData, false);
 		            gameBoard.draw();
 				}
@@ -148,7 +148,7 @@ public class Controls implements ActionListener {
 		                return;
 		            }
 					loadFrame.setVisible(false);
-		            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
+		            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass, gameBoard.getBackgroundImagePath());
 		            state.load(gameData, false);
 		            gameBoard.draw();
 				}
@@ -157,35 +157,9 @@ public class Controls implements ActionListener {
             loadFrame.setContentPane(loadPanel);
             loadFrame.setSize(300, 150);
             loadFrame.setVisible(true);
-            /*Object[] possibilities = db.getSavedGameNames().toArray();
-	        String chosen = (String) JOptionPane.showInputDialog(
-	                null,
-	                "Select Game from ",
-	                "Load Game",
-	                JOptionPane.PLAIN_MESSAGE,
-	                null, possibilities,
-	                null);
-	
-	        if (chosen == null) {
-	            return;
-	        }
-            gameData = db.getSavedGame(chosen);
-    */        
-
-//            Object[] possibilities = GameRepo.getInstance().getGameNameList().toArray();
-//            String staeString = (String) JOptionPane.showInputDialog(
-//                    panel,
-//                    "Select Game : ",
-//                    "Load Game",
-//                    JOptionPane.PLAIN_MESSAGE,
-//                    null, possibilities,
-//                    null);
-//            state.load(staeString);
-//
-//            gameBoard.draw();
         } else if (e.getSource() == save) {
             log.info("Save button is clicked");
-            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass);
+            MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass, gameBoard.getBackgroundImagePath());
             String gameData = state.getSaveString();
             String gameName = JOptionPane.showInputDialog(null, "Please give your game a name:", "Save Game", JOptionPane.PLAIN_MESSAGE);
             if (gameName == null || gameName.isEmpty()) {
