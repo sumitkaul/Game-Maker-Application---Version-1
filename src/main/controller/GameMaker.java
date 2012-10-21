@@ -61,6 +61,8 @@ public class GameMaker {
 		guiFrame.getRootPane().addComponentListener(new ComponentAdapter() {
 
 			public void componentResized(ComponentEvent arg0) {
+				Constants.PREVIOUS_WINDOW_WIDTH = Constants.WINDOW_WIDTH;
+				Constants.PREVIOUS_WINDOW_HEIGHT = Constants.WINDOW_HEIGHT;
 				Constants.WINDOW_WIDTH = guiFrame.getWidth();
 				Constants.WINDOW_HEIGHT = guiFrame.getHeight();
 

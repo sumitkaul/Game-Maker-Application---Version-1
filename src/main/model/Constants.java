@@ -9,6 +9,8 @@ public class Constants {
 
 	public static int INITIAL_WINDOW_WIDTH = 850;
 	public static int INITIAL_WINDOW_HEIGHT = 750;
+	public static int PREVIOUS_WINDOW_WIDTH = 850;
+	public static int PREVIOUS_WINDOW_HEIGHT = 750;
 	public static int WINDOW_WIDTH = 850;
 	public static int WINDOW_HEIGHT = 750;
 	public static int TIMER_DELAY = 10;
