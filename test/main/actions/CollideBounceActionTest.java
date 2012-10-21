@@ -33,14 +33,14 @@ public class CollideBounceActionTest {
 		sprite2.setWidth(20);
 	}
 
-//	@Test
-//	public void testAct() {
-//		assertEquals(1,sprite1.getVx());
-//		assertEquals(1,sprite1.getVy());
+	@Test
+	public void testAct() {
+		assertEquals(1,sprite1.getVx());
+		assertEquals(1,sprite1.getVy());
 //		action.setAgainstObjectName(sprite2.getName());
 //		action.act(sprite1);
 //		assertEquals(-1,sprite1.getVx());
 //		assertEquals(-1,sprite1.getVy());
-//	}
+	}
 
 }
