@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import main.interfaces.IAction;
 import main.utilities.Action;
 import main.utilities.ActionObjectPair;
 import main.utilities.Event;
@@ -192,6 +193,18 @@ public class Sprite {
 			newActions.add(actionObjectPair);
 		this.events.put(event, newActions);
 	}
+	
+	public void addEvent(Event event, Action action, IAction actionObj, String actionObjectName) {
+		List<ActionObjectPair> existingActions = this.events.get(event);
+		List<ActionObjectPair> newActions = new ArrayList<ActionObjectPair>();;
+		if(existingActions!=null)
+			newActions.addAll(existingActions);
+		ActionObjectPair actionObjectPair = new ActionObjectPair(action,actionObjectName);
+		    actionObjectPair.setRelatedAction(actionObj);
+			newActions.add(actionObjectPair);
+		this.events.put(event, newActions);
+	}
+
 
 	public void addEvents(HashMap<String, List<?>> events) {
 		for(Object key : events.keySet()) {

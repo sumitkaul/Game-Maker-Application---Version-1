@@ -19,6 +19,7 @@ public class CollideRemoveAction implements IAction {
 	.getLogger(CollideRemoveAction.class);
 	
 	private String againstObjectName;
+	private IAction soundAction;
 	@Override
 	public void act(Drawable gameObject) {
 		int xSpeed = gameObject.getVx();
@@ -36,12 +37,15 @@ public class CollideRemoveAction implements IAction {
 			if(getAgainstObjectName().equals(Constants.ANY_OBJECT)){
 				if(gameObject.intersects(obj.getObjectBounds())){
 					if(!xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						originalGameObjects.remove(gameObject);
 					}
 					if(!yReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						originalGameObjects.remove(gameObject);
 					}
 					else if(yReversed.intersects(obj.getObjectBounds())&&xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						originalGameObjects.remove(gameObject);
 					}
 					
@@ -50,12 +54,15 @@ public class CollideRemoveAction implements IAction {
 				LOG.debug("Executing collide remove action for " + gameObject.getName());
 				if(gameObject.intersects(obj.getObjectBounds())){
 					if(!xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						originalGameObjects.remove(gameObject);
 					}
 					if(!yReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						originalGameObjects.remove(gameObject);
 					}
 					else if(yReversed.intersects(obj.getObjectBounds())&&xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						originalGameObjects.remove(gameObject);
 					}
 					
@@ -80,6 +87,12 @@ public class CollideRemoveAction implements IAction {
 	}
 	public void setAgainstObjectName(String againstObjectName) {
 		this.againstObjectName = againstObjectName;
+	}
+	public IAction getSoundAction() {
+		return soundAction;
+	}
+	public void setSoundAction(IAction soundAction) {
+		this.soundAction = soundAction;
 	}
 
 }

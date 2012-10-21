@@ -18,6 +18,7 @@ public class CollideStickAction implements IAction {
 	.getLogger(CollideStickAction.class);
 	
 	private String againstObjectName;
+	private IAction soundAction;
 	@Override
 	public void act(Drawable gameObject) {
 		int xSpeed = gameObject.getVx();
@@ -36,6 +37,7 @@ public class CollideStickAction implements IAction {
 					gameObject.setX(gameObject.getX() + gameObject.getVx());
 					gameObject.setVy(obj.getVy());
 					gameObject.setY(gameObject.getY() + gameObject.getVy());
+					soundAction.act(gameObject);
 				}
 			} else if(obj.getName().equals(getAgainstObjectName())) {
 				LOG.debug("Executing collide stick action for " + gameObject.getName());
@@ -44,6 +46,7 @@ public class CollideStickAction implements IAction {
 						gameObject.setX(gameObject.getX() + gameObject.getVx());
 						gameObject.setVy(obj.getVy());
 						gameObject.setY(gameObject.getY() + gameObject.getVy());
+						soundAction.act(gameObject);
 				}
 			}
 		}
@@ -53,6 +56,12 @@ public class CollideStickAction implements IAction {
 	}
 	public void setAgainstObjectName(String againstObjectName) {
 		this.againstObjectName = againstObjectName;
+	}
+	public IAction getSoundAction() {
+		return soundAction;
+	}
+	public void setSoundAction(IAction soundAction) {
+		this.soundAction = soundAction;
 	}
 
 }

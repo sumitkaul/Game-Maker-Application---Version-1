@@ -9,7 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -34,9 +38,11 @@ import main.actions.MoveRightKeyAction;
 import main.actions.MoveUpKeyAction;
 import main.actions.NormalMoveAction;
 import main.actions.NullKeyAction;
+import main.actions.PlaySoundAction;
 import main.actions.RotateClockwiseKeyAction;
 import main.actions.RotateCounterClockwiseKeyAction;
 import main.controller.GameController;
+import main.interfaces.IAction;
 import main.interfaces.KeyAction;
 import main.model.Constants;
 import main.model.Drawable;
@@ -45,6 +51,7 @@ import main.utilities.Action;
 import main.utilities.Event;
 import main.utilities.ImageConverter;
 import main.utilities.JarReader;
+import main.utilities.Sound;
 
 import org.apache.log4j.Logger;
 
@@ -88,8 +95,35 @@ ItemListener {
 	private Drawable object;
 	private JComboBox soundSelectionBox;
 	private List<String> list;
+	ArrayList<String> audioList = new ArrayList<String>();
+	private String previewAudioFile;
 
 	public ObjectConfigurationFrame(Drawable d) {
+		
+		ZipInputStream zip;
+		try {
+			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("sound.jar")));
+		
+			ZipEntry ze = null;
+			log.info("ZipEntry is"+ze);
+
+		    while((ze = zip.getNextEntry()) != null) {
+		        String entryName = ze.getName();
+		        log.debug("entryName="+entryName);
+		        if(entryName.endsWith(".wav") ) {
+		        	audioList.add(entryName);
+		        	}
+		    }
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		for(int i=0; i<audioList.size();i++)
+	    {
+	    	log.debug("Audio list entry:"+audioList.get(i));	
+	    }
+		
+		
 		this.object = d;
 		this.setTitle(d.getName());
 		this.setLayout(new GridLayout(1, 1));
@@ -131,21 +165,45 @@ ItemListener {
 
 
 		this.againstObjectSelectionBox = new JComboBox();
+		this.soundSelectionBox = new JComboBox();
+		JButton preview = new JButton("Preview");
+
 		againstObjectPanel = new JPanel();
 		againstObjectPanel.add(new JLabel("Collide against Object"));
 		againstObjectPanel.add(againstObjectSelectionBox);
+		againstObjectPanel.add(new JLabel("Sound"));
+		againstObjectPanel.add(soundSelectionBox);
+		againstObjectPanel.add(preview);
+		
+		preview.addActionListener(new ActionListener()   {	
+			public void actionPerformed(ActionEvent e) {
+				int soundSlection = soundSelectionBox.getSelectedIndex();
+				if( soundSelectionBox.getSelectedIndex() != 0)
+				{
+					Sound.getInstance().setSound_file(audioList.get(soundSlection-1));
+					Sound.getInstance().playSound();
+				}
+				else 
+				{	
+					JOptionPane.showMessageDialog(soundSelectionBox, "Please select an audio file");
+				}
+		       }
+			
+				
+		});
+		
 		this.gridLayoutRows++;
 		this.setLayout(new GridLayout(this.gridLayoutRows, 1));
 		this.add(againstObjectPanel);
 		againstObjectPanel.setVisible(false);
 
-		this.soundSelectionBox = new JComboBox();
-		soundPanel = new JPanel();
-		soundPanel.add(new JLabel("Select sound : "));
-		
+//		this.soundSelectionBox = new JComboBox();
+//		soundPanel = new JPanel();
+//		soundPanel.add(new JLabel("Select sound : "));
+//		
 		this.gridLayoutRows++;
 		this.setLayout(new GridLayout(this.gridLayoutRows, 1));
-		soundPanel.setVisible(false);
+		//soundPanel.setVisible(false);
 		
 //		JarReader reader = new JarReader();
 //		reader.setZipStream("sounds.jar");
@@ -153,8 +211,8 @@ ItemListener {
 		for (int i = 0; i < list.size(); i++) {
 	    	soundSelectionBox.addItem(list.get(i).toString());
 		}
-		soundPanel.add(soundSelectionBox);
-		this.add(soundPanel);
+//		soundPanel.add(soundSelectionBox);
+//		this.add(soundPanel);
 		
 		eventSelectionBox.addActionListener(new ActionListener() {	
 			@Override
@@ -339,16 +397,31 @@ ItemListener {
 		Action action = (Action) actionSelectionBox.getSelectedItem();
 		String againstObjectName = (String) againstObjectSelectionBox.getSelectedItem();
 		
-		this.object.addEvent(event, action, againstObjectName);
-		if(event.equals(Event.MOVE)) {
-			if(action.equals(Action.NORMAL_MOVE)) {
-				this.object.setMoveAction(new NormalMoveAction());
-			} else if(action.equals(Action.MOVE_AROUND)) {
-				this.object.setMoveAction(new MoveAroundAction());
-			} else if(action.equals(Action.DESCEND_LEFT_RIGHT)) {
-				this.object.setMoveAction(new DescendLeftAndRightAction());
+		int soundSlection =  soundSelectionBox.getSelectedIndex();
+		if(event.equals(Event.COLLISION) )
+		{
+			IAction actionObj =null;
+			if(soundSlection != 0){
+			     actionObj =new PlaySoundAction(this.audioList.get(soundSlection-1));			
 			}
+			else{
+				 actionObj =new PlaySoundAction("");
+			}
+			this.object.addEvent(event, action,actionObj, againstObjectName);
 		}
+		else
+		{
+			this.object.addEvent(event, action, againstObjectName);
+			if(event.equals(Event.MOVE)) {
+				if(action.equals(Action.NORMAL_MOVE)) {
+					this.object.setMoveAction(new NormalMoveAction());
+				} else if(action.equals(Action.MOVE_AROUND)) {
+					this.object.setMoveAction(new MoveAroundAction());
+				} else if(action.equals(Action.DESCEND_LEFT_RIGHT)) {
+					this.object.setMoveAction(new DescendLeftAndRightAction());
+				}
+			}
+		}	
 		updateGameObject();
 
 		GameBoard.getGameBoard().repaint();
@@ -439,6 +512,13 @@ ItemListener {
 			if(object!=this.object)
 				againstObjectSelectionBox.addItem(object.getName());
 		}
+		soundSelectionBox.removeAllItems();
+		soundSelectionBox.addItem(Constants.NONE);
+		
+		
+		String [] labels = new String[audioList.size()];
+		for(int i=0;i<audioList.size();i++)
+			soundSelectionBox.addItem(audioList.get(i).substring(audioList.get(i).indexOf("/")+1));
 		this.validate();
 		this.repaint();
 	}

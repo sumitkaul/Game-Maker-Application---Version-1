@@ -21,6 +21,7 @@ public class CollideGameLoseAction implements IAction {
 	.getLogger(CollideGameLoseAction.class);
 	
 	private String againstObjectName;
+	private IAction soundAction;
 	@Override
 	public void act(Drawable gameObject) {
 		int xSpeed = gameObject.getVx();
@@ -37,14 +38,17 @@ public class CollideGameLoseAction implements IAction {
 			if(getAgainstObjectName().equals(Constants.ANY_OBJECT)){
 				if(gameObject.intersects(obj.getObjectBounds())){
 					if(!xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						JOptionPane.showMessageDialog(null, "You Lose");
 						Controls.getInstance().getDaemon().stop();
 					}
 					if(!yReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						JOptionPane.showMessageDialog(null, "You Lose");
 						Controls.getInstance().getDaemon().stop();
 					}
 					else if(yReversed.intersects(obj.getObjectBounds())&&xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						JOptionPane.showMessageDialog(null, "You Lose");
 						Controls.getInstance().getDaemon().stop();
 					}
@@ -55,14 +59,17 @@ public class CollideGameLoseAction implements IAction {
 				LOG.debug("Executing collide lose action for " + gameObject.getName());
 				if(gameObject.intersects(obj.getObjectBounds())){
 					if(!xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						JOptionPane.showMessageDialog(null, "You Lose");
 						Controls.getInstance().getDaemon().stop();
 					}
 					if(!yReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						JOptionPane.showMessageDialog(null, "You Lose");
 						Controls.getInstance().getDaemon().stop();
 					}
 					else if(yReversed.intersects(obj.getObjectBounds())&&xReversed.intersects(obj.getObjectBounds())){
+						soundAction.act(gameObject);
 						JOptionPane.showMessageDialog(null, "You Lose");
 						Controls.getInstance().getDaemon().stop();
 					}
@@ -73,15 +80,19 @@ public class CollideGameLoseAction implements IAction {
 		if(getAgainstObjectName().equals(Constants.GAME_WALL)) {
 			LOG.debug("Executing collide lose action for " + gameObject.getName());
 			if(gameObject.getX()<=Constants.BOARD_OFFSET) {
+				soundAction.act(gameObject);
 				JOptionPane.showMessageDialog(null, "You Lose");
 				Controls.getInstance().getDaemon().stop();
 			} else if(gameObject.getX()+gameObject.getWidth() >= Constants.BOARD_WIDTH){
+				soundAction.act(gameObject);
 				JOptionPane.showMessageDialog(null, "You Lose");
 				Controls.getInstance().getDaemon().stop();
 			} else if(gameObject.getY() <= Constants.BOARD_OFFSET){
+				soundAction.act(gameObject);
 				JOptionPane.showMessageDialog(null, "You Lose");
 				Controls.getInstance().getDaemon().stop();
 			} else if(gameObject.getY()+gameObject.getHeight() >= Constants.BOARD_HEIGHT){
+				soundAction.act(gameObject);
 				JOptionPane.showMessageDialog(null, "You Lose");
 				Controls.getInstance().getDaemon().stop();
 			}
@@ -92,6 +103,12 @@ public class CollideGameLoseAction implements IAction {
 	}
 	public void setAgainstObjectName(String againstObjectName) {
 		this.againstObjectName = againstObjectName;
+	}
+	public IAction getSoundAction() {
+		return soundAction;
+	}
+	public void setSoundAction(IAction soundAction) {
+		this.soundAction = soundAction;
 	}
 
 }

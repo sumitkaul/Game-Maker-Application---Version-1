@@ -107,51 +107,43 @@ public class GameController {
 			for(ActionObjectPair action : actions) {
 				if(action.getAction().equals(Action.BOUNCE)) {
 					CollideBounceAction bounce = new CollideBounceAction();
+					if(action.getRelatedAction() !=null)
+						   bounce.setSoundAction(action.getRelatedAction());
 					bounce.setAgainstObjectName(action.getGameObjectName());
 					bounce.act(item);
 				}
 				if(action.getAction().equals(Action.BOUNCE_RANDOM)){
 					BounceRandomAction bounceRandom = new BounceRandomAction();
+					if(action.getRelatedAction() !=null)
+						   bounceRandom.setSoundAction(action.getRelatedAction());
 					bounceRandom.setAgainstObjectName(action.getGameObjectName());
 					bounceRandom.act(item);
 				}
 				if(action.getAction().equals(Action.DISAPPEAR)) {
 					CollideRemoveAction bounce = new CollideRemoveAction();
+					if(action.getRelatedAction() !=null)
+						   bounce.setSoundAction(action.getRelatedAction());
 					bounce.setAgainstObjectName(action.getGameObjectName());
 					bounce.act(item);
 				}
 				if(action.getAction().equals(Action.STICK)) {
 					CollideStickAction bounce = new CollideStickAction();
+					if(action.getRelatedAction() !=null)
+						   bounce.setSoundAction(action.getRelatedAction());
 					bounce.setAgainstObjectName(action.getGameObjectName());
 					bounce.act(item);
 				}
 				if(action.getAction().equals(Action.GAME_OVER)) {
 					CollideGameLoseAction bounce = new CollideGameLoseAction();
+					if(action.getRelatedAction() !=null)
+						   bounce.setSoundAction(action.getRelatedAction());
 					bounce.setAgainstObjectName(action.getGameObjectName());
 					bounce.act(item);
 				}
 				if(action.getAction().equals(Action.GAME_WIN)) {
 					CollideGameWinAction bounce = new CollideGameWinAction();
-					bounce.setAgainstObjectName(action.getGameObjectName());
-					bounce.act(item);
-				}
-				if(action.getAction().equals(Action.PLAY_SOUND_BOUNCE)) {
-					PlayBounceSound bounce = new PlayBounceSound();
-					bounce.setAgainstObjectName(action.getGameObjectName());
-					bounce.act(item);
-				}
-				if(action.getAction().equals(Action.PLAY_SOUND_BRICK)) {
-					PlayBrickSound bounce = new PlayBrickSound();
-					bounce.setAgainstObjectName(action.getGameObjectName());
-					bounce.act(item);
-				}
-				if(action.getAction().equals(Action.PLAY_SOUND_APPLAUSE)) {
-					PlayAppluseSound bounce = new PlayAppluseSound();
-					bounce.setAgainstObjectName(action.getGameObjectName());
-					bounce.act(item);
-				}
-				if(action.getAction().equals(Action.PLAY_SOUND_GAMEOVER)) {
-					PlayGameOverSound bounce = new PlayGameOverSound();
+					if(action.getRelatedAction() !=null)
+						   bounce.setSoundAction(action.getRelatedAction());
 					bounce.setAgainstObjectName(action.getGameObjectName());
 					bounce.act(item);
 				}

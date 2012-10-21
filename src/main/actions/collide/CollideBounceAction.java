@@ -18,6 +18,7 @@ public class CollideBounceAction implements IAction {
 	.getLogger(CollideBounceAction.class);
 	
 	private String againstObjectName;
+	private IAction soundAction;
 	@Override
 	public void act(Drawable gameObject) {
 		int xSpeed = gameObject.getVx();
@@ -35,13 +36,16 @@ public class CollideBounceAction implements IAction {
 				if(gameObject.intersects(obj.getObjectBounds())){
 					if(!xReversed.intersects(obj.getObjectBounds())){
 						gameObject.setVx(xSpeed*-1);
+						soundAction.act(gameObject);
 					}
 					if(!yReversed.intersects(obj.getObjectBounds())){
 						gameObject.setVy(ySpeed*-1);
+						soundAction.act(gameObject);
 					}
 					else if(yReversed.intersects(obj.getObjectBounds())&&xReversed.intersects(obj.getObjectBounds())){
 						gameObject.setVy(ySpeed*-1);
 						gameObject.setVx(xSpeed*-1);
+						soundAction.act(gameObject);
 					}
 				}
 			// Collide with particular object
@@ -50,13 +54,16 @@ public class CollideBounceAction implements IAction {
 				if(gameObject.intersects(obj.getObjectBounds())){
 					if(!xReversed.intersects(obj.getObjectBounds())){
 						gameObject.setVx(xSpeed*-1);
+						soundAction.act(gameObject);
 					}
 					if(!yReversed.intersects(obj.getObjectBounds())){
 						gameObject.setVy(ySpeed*-1);
+						soundAction.act(gameObject);
 					}
 					else if(yReversed.intersects(obj.getObjectBounds())&&xReversed.intersects(obj.getObjectBounds())){
 						gameObject.setVy(ySpeed*-1);
 						gameObject.setVx(xSpeed*-1);
+						soundAction.act(gameObject);
 					}
 				}
 			} 
@@ -65,18 +72,22 @@ public class CollideBounceAction implements IAction {
 			LOG.debug("Executing collide bounce action for " + gameObject.getName());
 			if(gameObject.getX()<=Constants.BOARD_OFFSET) {
 				gameObject.setVx(-1 * gameObject.getVx());
+				soundAction.act(gameObject);
 				//PlaySound sound = new PlaySound();
 				//sound.act(null);
 			} else if(gameObject.getX()+gameObject.getWidth() >= Constants.BOARD_WIDTH){
 				gameObject.setVx(-1 * gameObject.getVx());
+				soundAction.act(gameObject);
 				//PlaySound sound = new PlaySound();
 				//sound.act(null);
 			} else if(gameObject.getY() <= Constants.BOARD_OFFSET){
 				gameObject.setVy(-1 * gameObject.getVy());
+				soundAction.act(gameObject);
 				//PlaySound sound = new PlaySound();
 				//sound.act(null);
 			} else if(gameObject.getY()+gameObject.getHeight() >= Constants.BOARD_HEIGHT){
 				gameObject.setVy(-1 * gameObject.getVy());
+				soundAction.act(gameObject);
 				//PlaySound sound = new PlaySound();
 				//sound.act(null);
 			}
@@ -87,6 +98,12 @@ public class CollideBounceAction implements IAction {
 	}
 	public void setAgainstObjectName(String againstObjectName) {
 		this.againstObjectName = againstObjectName;
+	}
+	public IAction getSoundAction() {
+		return soundAction;
+	}
+	public void setSoundAction(IAction soundAction) {
+		this.soundAction = soundAction;
 	}
 
 }

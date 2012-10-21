@@ -25,10 +25,6 @@ public enum Action {
 	GAME_OVER("Game Over"),
 	GAME_WIN("Game Win"),
 	BOUNCE_RANDOM("Bounce Random"),
-	PLAY_SOUND_APPLAUSE("Play Applause Sound"),
-	PLAY_SOUND_GAMEOVER("Play GameOver Sound"),
-	PLAY_SOUND_BRICK("Play Brick Sound"),
-	PLAY_SOUND_BOUNCE("Play Bounce Sound"),
 	SCORE("Add Score");
 
 	private String action;

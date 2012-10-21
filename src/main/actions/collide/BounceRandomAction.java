@@ -16,6 +16,7 @@ public class BounceRandomAction implements IAction {
 	
 	private int min = -1;
 	private int max = 1;
+	private IAction soundAction;
 	
 	@XStreamOmitField
 	private transient static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
@@ -46,6 +47,7 @@ public class BounceRandomAction implements IAction {
 								
 									swapXtoY(gameObject);
 									gameObject.setVy(factor * gameObject.getVy());
+									soundAction.act(gameObject);
 								}
 							}
 							else if(!yReversed.intersects(obj.getObjectBounds())){
@@ -57,6 +59,7 @@ public class BounceRandomAction implements IAction {
 									
 									swapYtoX(gameObject);
 									gameObject.setVx(factor * gameObject.getVx());
+									soundAction.act(gameObject);
 								}
 							}
 							
@@ -71,6 +74,7 @@ public class BounceRandomAction implements IAction {
 						
 							swapXtoY(gameObject);
 							gameObject.setVy(factor * gameObject.getVy());
+							soundAction.act(gameObject);
 						}
 				
 					 else if(gameObject.getX()+gameObject.getWidth() >= Constants.BOARD_WIDTH){
@@ -80,7 +84,7 @@ public class BounceRandomAction implements IAction {
 							
 							swapXtoY(gameObject);
 							gameObject.setVy(factor * gameObject.getVy());
-							
+							soundAction.act(gameObject);
 							
 						}
 					else if(gameObject.getY() <= Constants.BOARD_OFFSET){
@@ -90,6 +94,7 @@ public class BounceRandomAction implements IAction {
 							
 							swapYtoX(gameObject);
 							gameObject.setVx(factor * gameObject.getVx());
+							soundAction.act(gameObject);
 							
 							
 							
@@ -101,6 +106,7 @@ public class BounceRandomAction implements IAction {
 							
 							swapYtoX(gameObject);
 							gameObject.setVx(factor * gameObject.getVx());
+							soundAction.act(gameObject);
 						
 							
 						}
@@ -150,6 +156,12 @@ public class BounceRandomAction implements IAction {
 				gameObject.setVy(gameObject.getVx());
 				gameObject.setVx(temp);
 				LOG.info("the new velocities are" + gameObject.getVx() + " " + gameObject.getVy());
+			}
+			public IAction getSoundAction() {
+				return soundAction;
+			}
+			public void setSoundAction(IAction soundAction) {
+				this.soundAction = soundAction;
 			}
 }
 
