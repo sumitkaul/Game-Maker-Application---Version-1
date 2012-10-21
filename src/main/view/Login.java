@@ -36,9 +36,9 @@ public class Login {
 	private JPanel contentPane;
 	private DBConnector db;
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		new Login();
-	}
+	}*/
 
 	public Login() {
 		db = new DBConnector();
@@ -113,7 +113,8 @@ public class Login {
 		signupButton.setText("Signup");
 		signupButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Yet to be Implemented !");
+				SignUp signup=new SignUp();
+				
 			}
 		});
 
