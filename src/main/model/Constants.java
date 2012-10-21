@@ -37,4 +37,5 @@ public class Constants {
 	public static final int ROTATION_AMOUNT = 2;
 	public static final int SCORE_INCR =10;
 	public static String USERNAME = "default";
+	public static String DEFAULT_USER = "default";
 }
