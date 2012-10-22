@@ -16,5 +16,5 @@
     <j2se version="1.6+" />
     <jar href="team7.jar" />
   </resources>
-  <application-desc main-class="main.controller.GameMaker" />
+  <application-desc main-class="main.view.Login" />
 </jnlp>
