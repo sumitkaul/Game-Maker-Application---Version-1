@@ -15,7 +15,6 @@ public enum Action {
 	ROTATE_COUNTERCLOCKWISE("Rotate CounterClockwise"),
 	CREATE_OBJECT("Create Object"),
 	BOUNCE("Bounce"),
-	MAKE_SOUND("Make Sound"),
 	DISAPPEAR("Disappear"),
 	STICK("Stick"),
 	JUMP_UP("Jump Up"),
