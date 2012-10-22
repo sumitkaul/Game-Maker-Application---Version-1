@@ -57,8 +57,7 @@ import org.apache.log4j.Logger;
 
 import repos.SoundRepo;
 
-public class ObjectConfigurationFrame extends JFrame implements ActionListener,
-ItemListener {
+public class ObjectConfigurationFrame extends JFrame implements ActionListener{
 	/**
 	 * 
 	 */
@@ -229,45 +228,12 @@ ItemListener {
 				}
 			}
 		});
-
-//		actionSelectionBox.addActionListener(new ActionListener(){
-//
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				Action action = (Action) actionSelectionBox.getSelectedItem();
-//				if(action.equals(Action.PLAY_SOUND))
-//				{
-//					soundPanel.setVisible(true);
-//				}
-//				else
-//				{
-//					soundPanel.setVisible(false);
-//				}
-//			}
-//		
-//		});
-
-		checkBounceCollision = new JCheckBox("Bounce");
-		checkDefelectableCollision = new JCheckBox("Deflectable");
-		checkDisappearCollision = new JCheckBox("Disappear");
-		checkStickCollision = new JCheckBox("Stick");
-		checkBounceCollision.addItemListener(this);
-		checkDefelectableCollision.addItemListener(this);
-		checkDisappearCollision.addItemListener(this);
-		checkStickCollision.addItemListener(this);
 		create = new JButton("Create");
 		this.addConfigurationItem("Events", create);
 		
 		update = new JButton("Update");
 		update.addActionListener(this);
 		this.addConfigurationItem("", update);
-		
-		JPanel collisionBoxesPanel = new JPanel();
-		collisionBoxesPanel.add(checkBounceCollision);
-		collisionBoxesPanel.add(checkDefelectableCollision);
-		collisionBoxesPanel.add(checkDisappearCollision);
-		collisionBoxesPanel.add(checkStickCollision);
-		//this.addConfigurationItem("Collision", collisionBoxesPanel);
 
 		keyboardEventCreate = new JButton("Create Key Event");
 		this.addConfigurationItem("Keyboard Events", keyboardEventCreate);
@@ -464,42 +430,6 @@ ItemListener {
 		keyActionBox.addItem("Jump Right");
 		keyActionBox.addItem("Jump Down");
 		return keyActionBox;
-	}
-
-	@Override
-	public void itemStateChanged(ItemEvent event) {
-		Object source = event.getItemSelectable();
-
-		if (source == checkStickCollision) {
-			if (checkStickCollision.isSelected()) {
-				this.object.setActionsMap("collidable", true);
-				this.object.setActionsMap("stickable", true);
-			}
-		}
-		if (source == checkBounceCollision) {
-			if (checkBounceCollision.isSelected()) {
-				this.object.setActionsMap("collidable", true);
-				this.object.setActionsMap("wallDeflectableBottom", true);
-				this.object.setActionsMap("wallDeflectableTop", true);
-				this.object.setActionsMap("wallDeflectableRight", true);
-				this.object.setActionsMap("wallDeflectableLeft", true);
-			}
-		}
-		if (source == checkDisappearCollision) {
-			if (checkDisappearCollision.isSelected()) {
-				this.object.setActionsMap("collidable", true);
-				this.object.setActionsMap("disappear", true);
-			}
-		}
-
-		if (source == checkDefelectableCollision) {
-			if (checkDefelectableCollision.isSelected()) {
-				this.object.setActionsMap("collidable", true);
-				this.object.setActionsMap("deflectable", true);
-			}
-
-		}
-
 	}
 
 	private void repopulate() {

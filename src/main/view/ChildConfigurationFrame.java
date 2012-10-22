@@ -1,49 +1,35 @@
 package main.view;
 
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import main.actions.DescendLeftAndRightAction;
+import main.actions.FireAction;
 import main.actions.MoveAroundAction;
 import main.actions.NormalMoveAction;
-import main.controller.GameController;
 import main.model.Constants;
 import main.model.Drawable;
 import main.utilities.Action;
 import main.utilities.Event;
-import main.utilities.JarReader;
 
 import org.apache.log4j.Logger;
-
-import repos.ImageRepo;
 
 public class ChildConfigurationFrame extends JFrame implements ActionListener, ItemListener{
 
@@ -75,10 +61,10 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	private JCheckBox checkMoveAround;
 	private JCheckBox checkMoveLeftRight;
 	private JCheckBox checkFolowParentOreintaion;
-	private JComboBox boxSpriteSelection;
+	private JComboBox childImageBox;
 
-	private int xCoordinates;
-	private int yCoordinates;
+	private double xCoordinates;
+	private double yCoordinates;
 	private int childHeight;
 	private int childWidth;
 
@@ -104,18 +90,9 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	
 	private File currentDirectory;
 	private JFileChooser fileChooser;
-	private String fileName;
 	
 	public int getChildHeight() {
 		return childHeight;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
 	}
 
 	public void setChildHeight(int childHeight) {
@@ -129,14 +106,12 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	{
 		
 		parentObject=parent;
-		JPanel childPanel = setImagePanel();
-		this.add(childPanel);
-		setChooseSprite();
+		populateImagesList();
 		parent.setChildConfigurationFrame(this);
 		labelWidth = new JLabel("Width");
 		labelHeight = new JLabel("Height");
-		labelVelocityX = new JLabel("Direction X");
-		labelVelocityY = new JLabel("Directon Y");
+		labelVelocityX = new JLabel("Velocity X");
+		labelVelocityY = new JLabel("Velocity Y");
 		labelAccelerationX = new JLabel("Acceleration X");
 		labelAccelerationY = new JLabel("Acceleration Y");
 		labelActions = new JLabel("Check the Actions");
@@ -178,7 +153,6 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 
 	
 		buttonCreate = new JButton("Booom!!!");
-		
 
 		this.keyListenerPanel = new KeyListenerPanel();
 		childKeyCode = -1;
@@ -187,8 +161,7 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 				Constants.CHILD_OBJECT_CONFIGURATION_FRAME_HEIGHT);
 		this.setLayout(new GridLayout(0, 1));
 		this.add(labelSpriteSelection);
-		this.add(boxSpriteSelection);
-		//this.add(this.getBoxSpriteSelection());
+		this.add(this.getBoxSpriteSelection());
 		this.add(labelWidth);
 		this.add(textWidth);
 		this.add(labelHeight);
@@ -214,8 +187,6 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 		this.add(buttonCreate);
 		buttonCreate.addActionListener(this);
 		
-		
-		
 		movable = false;
 		collidable = false;
 		disappear = false;
@@ -229,169 +200,20 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 		
 		
 	}
-	private JPanel setImagePanel() {
-		// TODO Auto-generated method stub
-		
-		JPanel panel=new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-		//panel.setLayout(new MigLayout("","[]30[]")); 
-		final JScrollPane scrollBar = new JScrollPane(panel,JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
-//		type= new JTextField("",10);
-	//	type.setFocusable(true);
-		final JTextField name= new JTextField("",10);
-		name.setFocusable(true);
-		ArrayList<String> list = new ArrayList<String>();
-		/// Reading from utility
-//		JarReader reader = new JarReader();
-//		reader.setZipStream("images.jar");
-//		list = reader.getAllEntries();
-		
-		ZipInputStream zip;
-		try {
-			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
-			ZipEntry ze = null;
-
-			 while((ze = zip.getNextEntry()) != null) {
-			        String entryName = ze.getName();
-			        log.debug("entryName="+entryName);
-			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
-			            list.add(entryName);
-			        }
-		    }
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-
-	    JPanel namePanel = new JPanel(new GridLayout(5,1));
-	    namePanel.add(new JLabel("Object Name: "));
-	    namePanel.add(name,"wrap");
-	    //namePanel.add(new JLabel("Object Type: "));
-	    //namePanel.add(type,"wrap");
-	    panel.add(namePanel);
-	    JPanel imagePanel = new JPanel(new GridLayout(5,5));
-	    //panel.add(new JLabel("Layer: "));
-	    //layerBox = new JComboBox(Layers.getInstance().getLayers().toArray()); 
-	    //panel.add(layerBox,"wrap");
-	   // File currentDirectory = null;
-	    for (int i = 0; i < list.size(); i++) {
-	    	final String imagePath = list.get(i);
-	   	 	log.info("The image is " + getClass().getClassLoader().getResource(imagePath));
-	        final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
-	   	 	//final Image image = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
-			ImageIcon icon = new ImageIcon(image.getScaledInstance(50, 50, 1));
-			final JLabel iconimage = new JLabel(icon);
-			iconimage.setToolTipText(list.get(i));
-			iconimage.addMouseListener(new MouseAdapter() {
-			      public void mouseClicked(MouseEvent e) {
-			    	  if(!name.getText().equalsIgnoreCase("")){
-			  			String filename = iconimage.getToolTipText();
-			  			setFileName(filename);
-			  			log.info("the selected filename is filepath");
-						
-			  			setVisible(false);
-			  			
-						Drawable item = new Drawable(Constants.GAMEOBJECT_INTIAL_XVALUE,Constants.GAMEOBJECT_INTIAL_YVALUE, imagePath);
-						
-						//item.setName(filename);
-						item.setName(name.getText());
-						//item.setType(type.getText());
-						
-						
-						GameController.getInstance().add(item);
-						ListPanel.getInstance().addAddedSpriteElements(item.getName());
-						
-						ListPanel.getInstance().getGameboard().draw();
-						//ListPanel.getInstance().getGameboard().requestFocus();
-						ObjectConfigurationFrame objFrame = new ObjectConfigurationFrame(item);
-						objFrame.setEnabled(true);
-						
-						return;
-						//addAddedSpriteElements(new ListItem(item.getName(),item.getId()));
-					
-
-			    	  }
-			  		else{
-			  			JOptionPane.showMessageDialog(scrollBar, "Please select an image and enter the Object type/name");
-			  		}
-			  		
-			        }
-			      });
-			if ((i+1)%3==0){
-				imagePanel.add(iconimage,"wrap");
-				}else{
-					imagePanel.add(iconimage);
-				}
-	   	    setSize(400, 600);
-	    add(scrollBar);
-	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    setLocationRelativeTo(null);
-	    setTitle("Choose a image");
-	    setVisible(false);
-	    }
-	    panel.add(imagePanel); 	
-	    
-	   /* layerBox.addActionListener(new ActionListener() {
-		      public void actionPerformed(ActionEvent e) {
-		    	  layer = ((String) ((JComboBox) e.getSource()).getSelectedItem());
-		    	  if(layer.equalsIgnoreCase(Constants.NEW_LAYER)) {
-		    		  layer = Layers.getInstance().addNewLayer();
-		    	  }
-		      }
-		 });
-	    */	    
-	    return panel;
-	}
-
-		
-	protected void setSelectedFile(String filename) {
-		// TODO Auto-generated method stub
-		this.fileName = fileName;
-		
-	}
-
-
-	
-
 	public void actionPerformed(ActionEvent event) {
 
-		String childFile = boxSpriteSelection.getSelectedItem().toString();
-		List<String> list = new ArrayList<String>();
-		String imagePath=null;
-		
-		ZipInputStream zip;
-		try {
-			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
-			ZipEntry ze = null;
-
-			 while((ze = zip.getNextEntry()) != null) {
-			        String entryName = ze.getName();
-			        log.debug("entryName="+entryName);
-			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
-			            list.add(entryName);
-			        }
-		    }
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		for (int i = 0; i < list.size(); i++){
-			if(list.get(i).equalsIgnoreCase("images/"+childFile+".png"))
-				imagePath = (list.get(i));
-		}
-		//String jarFilePath = reader.getFileEntry("images/" + childFile);
-		String childFilePath = ImageRepo.getInstance().getImagePath(childFile);
-		//log.info("jar file path " + jarFilePath);
-		log.info("child file name " + childFile);
 		
 		if (event.getSource() == buttonCreate)
 		{
 		  	log.debug("buttoncreate created childojects");
-			childObject = new Drawable(Constants.GAMEOBJECT_INTIAL_XVALUE,Constants.GAMEOBJECT_INTIAL_YVALUE, imagePath);
+			childObject = new Drawable(Constants.GAMEOBJECT_INTIAL_XVALUE,Constants.GAMEOBJECT_INTIAL_YVALUE,childImageBox.getSelectedItem().toString());
 			childObject.setHeight((Integer.parseInt(textHeight.getText())));
 			childObject.setWidth(Integer.parseInt(textWidth.getText()));
 			childObject.setVx(Integer.parseInt(textVelocityX.getText()));
 			childObject.setVy(Integer.parseInt(textVelocityY.getText()));
+			childObject.setHeading(parentObject.getHeading());
+			childObject.setX(parentObject.getX()/2);
+			childObject.setY(parentObject.getY()/2);
 			log.debug("vx and vy values"+childObject.getVx()+"    "+childObject.getVy());
 			childObject.setAx(Integer.parseInt(textAccelerationX.getText()));
 			childObject.setAy(Integer.parseInt(textAccelerationY.getText()));
@@ -400,7 +222,7 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 			if(this.isMovable())
 			{
 				childObject.setActionsMap("movable", true);
-				childObject.setMoveAction(new NormalMoveAction());
+				childObject.setMoveAction(new FireAction());
 				childObject.addEvent(Event.MOVE, Action.NORMAL_MOVE, "");
 				log.debug("movable with normal action move");
 			}
@@ -448,19 +270,19 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 		}
 
 		
-	public int getxCoordinates() {
+	public double getxCoordinates() {
 		return xCoordinates;
 	}
 
-	public void setxCoordinates(int xCoordinates) {
+	public void setxCoordinates(double xCoordinates) {
 		this.xCoordinates = xCoordinates;
 	}
 
-	public int getyCoordinates() {
+	public double getyCoordinates() {
 		return yCoordinates;
 	}
 
-	public void setyCoordinates(int yCoordinates) {
+	public void setyCoordinates(double yCoordinates) {
 		this.yCoordinates = yCoordinates;
 	}
 
@@ -551,14 +373,23 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	public int getChildKeyCode() {
 		return childKeyCode;
 	}
+	
+	public void setParentObject(Drawable parent)
+	{
+		this.parentObject = parent;
+	}
+	
+	public Drawable getParentObject(){
+		return(parentObject);
+	}
 
 	public JComboBox getBoxSpriteSelection() {
 
-		return boxSpriteSelection;
+		return childImageBox;
 	}
 
 	public void setBoxSpriteSelection(JComboBox boxSpriteSelection) {
-		this.boxSpriteSelection = boxSpriteSelection;
+		this.childImageBox = boxSpriteSelection;
 	}
 
 	public String getSpriteSelected() {
@@ -577,22 +408,25 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 		this.childWidth = childWidth;
 	}
 
-	public void setChooseSprite() {
-		//File currentDirectory = null;
-		
-		
-//		JarReader reader = new JarReader();
-//		reader.setZipStream("images.jar");
-		
-		List<String> list = ImageRepo.getInstance().getImageNameList();
+	public void populateImagesList() {
 
-		boxSpriteSelection = new JComboBox();
-		for (String item : list)
-		{
-		File spriteName = new File(item);
-		boxSpriteSelection.addItem(spriteName.getName());
-		}
-		
+		childImageBox = new JComboBox();
+
+			ZipInputStream zip;
+			try {
+				zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
+			
+				ZipEntry ze = null;
+
+			    while((ze = zip.getNextEntry()) != null) {
+			        String entryName = ze.getName();
+			        if(entryName.endsWith(".png") ) {
+			        	childImageBox.addItem(entryName);
+			        }
+			    }
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 
 	}
 
@@ -606,7 +440,6 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
 		Object source= e.getItemSelectable();
 		if(source == this.checkMovable)
 			this.setMovable(true);
