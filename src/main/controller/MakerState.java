@@ -84,6 +84,7 @@ public class MakerState {
             windowSize.setSize(gameState.getWindowSize().height, gameState.getWindowSize().width);
             
             compositeClass.removeAll();
+            GameBoard.getGameBoard().setBackgroundImage(null);
 			BackGroundImage img = new BackGroundImage();
 			if(gameState.getBackgroundImagePath()!=null && !gameState.getBackgroundImagePath().isEmpty())
 				img.setBackGroundFile(gameState.getBackgroundImagePath());
