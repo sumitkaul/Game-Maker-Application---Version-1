@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.Timer;
 
 import main.model.Constants;
-import main.model.MakerState;
 import main.view.GameBoard;
 
 import org.apache.log4j.Logger;
@@ -157,6 +156,7 @@ public class Controls implements ActionListener {
             loadFrame.setContentPane(loadPanel);
             loadFrame.setSize(300, 150);
             loadFrame.setVisible(true);
+            GameBoard.getGameBoard().setFocusable(true);
         } else if (e.getSource() == save) {
             log.info("Save button is clicked");
             MakerState state = new MakerState(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT), compositeClass, gameBoard.getBackgroundImagePath());

@@ -11,6 +11,8 @@ import java.net.URISyntaxException;
 
 import javax.swing.JFileChooser;
 
+import main.controller.MakerState;
+
 import org.apache.log4j.Logger;
 
 import com.thoughtworks.xstream.XStream;

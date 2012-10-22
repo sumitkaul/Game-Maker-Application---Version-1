@@ -1,7 +1,6 @@
 package main.actions;
 
 import main.interfaces.KeyAction;
-import main.model.Constants;
 import main.model.Drawable;
 
 public class MoveUpKeyAction implements KeyAction {
@@ -9,7 +8,7 @@ public class MoveUpKeyAction implements KeyAction {
 	private int keyCode;
 	public MoveUpKeyAction(){
 		this.keyCode = 0;
-		moveAmount = (-1)*Constants.OFFSET;
+		moveAmount = -1;
 	}
 	public MoveUpKeyAction(int amount){
 		this.moveAmount = amount;
@@ -17,8 +16,7 @@ public class MoveUpKeyAction implements KeyAction {
 	@Override
 	public void act(Drawable d, int keyCode) {
 		if(keyCode==this.keyCode)
-			if(d.getY() + moveAmount > 0)
-				d.setY(d.getY() + moveAmount);
+			d.setY(d.getY() + moveAmount);
 	}
 	public void setKeyCode(int code){
 		this.keyCode = code;

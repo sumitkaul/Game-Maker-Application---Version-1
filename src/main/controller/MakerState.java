@@ -1,10 +1,12 @@
-package main.model;
+package main.controller;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
 
-import main.controller.GameController;
+import main.model.Drawable;
+import main.model.GameObject;
+import main.model.StateSaver;
 import main.utilities.ImageConverter;
 import main.view.BackGroundImage;
 import main.view.GameBoard;
@@ -81,41 +83,20 @@ public class MakerState {
             
             windowSize.setSize(gameState.getWindowSize().height, gameState.getWindowSize().width);
             
-            for (GameObject oj : compositeClass.getChildObjects()) {
-                GameBoard.getGameBoard().removeKeyListener((Drawable) oj);
-            }
-            GameBoard.getGameBoard().removeAll();
             compositeClass.removeAll();
 			BackGroundImage img = new BackGroundImage();
 			if(gameState.getBackgroundImagePath()!=null && !gameState.getBackgroundImagePath().isEmpty())
 				img.setBackGroundFile(gameState.getBackgroundImagePath());
             compositeClass.add(gameState.getCompositeClass().getChildObjects());
             for (GameObject item : compositeClass.getChildObjects()) {
-                Drawable ditem = (Drawable) item;
-                log.debug("obj id: " + ditem.getName());
-                log.debug("get image: " + item.getImageFilePath());
-                ditem.setWidth(item.getWidth());
-                ditem.setHeight(item.getHeight());
-                ditem.setX(item.getX());
-                ditem.setY(item.getY());
-                
-                GameBoard.getGameBoard().addKeyListener(ditem);
-                List<Drawable> children = ditem.getChildrenList();
-                if (!children.isEmpty()) {
-                    for (Drawable child : children) {
-                        if (child.getImageFilePath() == null) {
-                            log.debug("continue for " + child.getName());
-                            continue;
-                        }
-                        child.setImg(ImageConverter.toBufferedImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(child.getImageFilePath()))));
-                    }
-                }
-                
-                ditem.setKeyActions(item.getKeyActions());
-                ditem.setPressedKey(item.getPressedKey());
-                //ditem.setActionsMap(item.getActions);
-                ditem.setImg(ImageConverter.toBufferedImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(item.getImageFilePath()))));
-            }
+				Drawable dItem = (Drawable)item;
+				dItem.setImg(ImageConverter.toBufferedImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(item.getImageFilePath()))));
+				if(dItem.getChildrenList()!=null) {
+					for(Drawable childItem : dItem.getChildrenList()) {
+						childItem.setImg(ImageConverter.toBufferedImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(childItem.getImageFilePath()))));
+					}					
+				}
+			}
         } catch (Exception e) {
             log.error("An exception! Oops!", e);
         }
