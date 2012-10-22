@@ -446,7 +446,6 @@ ItemListener {
 		this.object.setAx(Integer.parseInt(this.xAccelerationField.getText()));
 		this.object.setAy(Integer.parseInt(this.yAccelerationField.getText()));
 		this.object.setHeading(Integer.parseInt(this.headingField.getText()));
-		this.object.setImg(ImageConverter.toBufferedImage(this.object.getImage().getScaledInstance(this.object.getWidth(), this.object.getHeight(), Image.SCALE_SMOOTH)));
 	}
 
 	private JComboBox makeKeyActionBox() {

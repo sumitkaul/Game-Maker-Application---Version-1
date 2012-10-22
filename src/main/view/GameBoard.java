@@ -9,6 +9,8 @@ import java.awt.RenderingHints;
 import java.awt.TexturePaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -23,6 +25,7 @@ import java.util.List;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import main.actions.NormalMoveAction;
 import main.controller.GameController;
 import main.controller.MenuHandler;
 import main.model.Constants;
@@ -35,7 +38,7 @@ import main.utilities.ImageConverter;
 import org.apache.log4j.Logger;
 
 
-public class GameBoard extends Board implements MouseListener,MouseMotionListener, ActionListener, MouseWheelListener{
+public class GameBoard extends Board implements MouseListener,MouseMotionListener, ActionListener, MouseWheelListener, KeyListener{
 
 	private static final long serialVersionUID = 1L;
 
@@ -92,6 +95,7 @@ public class GameBoard extends Board implements MouseListener,MouseMotionListene
 		Constants.BOARD_WIDTH=(int)(0.5*Constants.WINDOW_WIDTH);
 		Constants.BOARD_HEIGHT=(int)(0.95*Constants.WINDOW_HEIGHT);
 		super.setSize(Constants.BOARD_WIDTH, Constants.BOARD_HEIGHT);
+		this.addKeyListener(this);
 	}
 	
 	public int getScore(){
@@ -276,6 +280,53 @@ public class GameBoard extends Board implements MouseListener,MouseMotionListene
 		}
 		
 		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		for(GameObject obj : GameController.getInstance().getChildObjects()) {
+			Drawable item = (Drawable) obj;
+			item.getPressedKey().add(e.getKeyCode());
+			GameController compositeClass=GameController.getInstance();
+			
+			if(!item.getChildrenList().isEmpty())
+			{
+				log.debug("list not empty");
+				for(Drawable child:item.getChildrenList())
+				{	
+						if(child.getKeycode()==e.getKeyCode())
+						{
+							Drawable newChildItem = (Drawable) child.clone();
+							
+							newChildItem.setX(item.getX() + item.getWidth()/2);
+							newChildItem.setY(item.getY() + item.getWidth()/2);
+							if(newChildItem.getActionsMap("follow"))
+							{
+								newChildItem.setVx(item.getVx());
+								newChildItem.setVy(item.getVy());
+								newChildItem.setMoveAction(new NormalMoveAction());
+							}
+							log.debug("child present"+newChildItem.getHeight()+"   "+newChildItem.getWidth()+"    "+newChildItem.getVx()+"  "+newChildItem.getVy());
+							compositeClass.add(newChildItem);
+							ListPanel.getInstance().addAddedSpriteElements(newChildItem.getName());
+						}
+	
+				
+				}
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		for(GameObject obj : GameController.getInstance().getChildObjects()) {
+			Drawable item = (Drawable) obj;
+			item.getPressedKey().clear();
+		}
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 
 }

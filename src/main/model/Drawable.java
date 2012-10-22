@@ -2,8 +2,6 @@ package main.model;
 
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
@@ -11,10 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.imageio.ImageIO;
 
-import main.actions.NormalMoveAction;
 import main.actions.NullMoveAction;
 import main.controller.GameController;
 import main.interfaces.IAction;
@@ -29,7 +27,7 @@ import org.apache.log4j.Logger;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 
-public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable{
+public class Drawable extends Sprite implements GameObject,Cloneable{
 
 	@XStreamOmitField
 	private transient static Logger log = Logger.getLogger(Drawable.class);
@@ -92,7 +90,7 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 		this.id = ++Constants.ID;
 		this.moveAction = new NullMoveAction();
 
-		pressedKey=new ArrayList<Integer>();
+		pressedKey=new CopyOnWriteArrayList<Integer>();
 		this.keyActions = new ArrayList<KeyAction>();
 		if(image==null){
 			log.warn("attempt to create Drawable will null File argument, defaulting to brick");
@@ -104,7 +102,6 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 		log.debug("constructing drawable with width " + this.getWidth() + " and height " + this.getHeight());
 		this.img = img;
 		GameBoard gameBoard = GameBoard.getGameBoard();
-		gameBoard.addKeyListener(this);
 		gameBoard.setFocusable(true);
 
 	}
@@ -143,7 +140,6 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 			log.error("An exception! Oops!",e);
 		}
 		GameBoard gameBoard = GameBoard.getGameBoard();
-		gameBoard.addKeyListener(this);
 		gameBoard.setFocusable(true);
 
 	}
@@ -189,51 +185,6 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 			ChildConfigurationFrame childConfigurationFrame) {
 		this.childConfigurationFrame = childConfigurationFrame;
 	}
-
-
-	public void keyPressed(KeyEvent e) {
-		pressedKey.add(e.getKeyCode());
-		listPanel=ListPanel.getInstance();
-		GameController compositeClass=GameController.getInstance();
-		
-		if(!this.getChildrenList().isEmpty())
-		{
-			log.debug("list not empty");
-			for(Drawable child:this.getChildrenList())
-			{	
-					if(child.getKeycode()==e.getKeyCode())
-					{
-						Drawable item = (Drawable) child.clone();
-						
-					//	item.setX((this.getX())+this.getWidth()/2);
-					//	item.setY((this.getY())+this.getHeight()/2);
-						item.setX(this.getX());
-						item.setY(this.getY()-10);
-						if(item.getActionsMap("follow"))
-						{
-							item.setVx(this.getVx());
-							item.setVy(this.getVy());
-							item.setMoveAction(new NormalMoveAction());
-						}
-						log.debug("child present"+item.getHeight()+"   "+item.getWidth()+"    "+item.getVx()+"  "+item.getVy());
-						compositeClass.add(item);
-						listPanel.addAddedSpriteElements(item.getName());
-					}
-
-			
-			}
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {	
-		log.debug("key release '" + e.getKeyChar() + "' code: " + e.getKeyCode());
-		try{
-			pressedKey.remove(pressedKey.indexOf(e.getKeyCode()));
-		} catch(ArrayIndexOutOfBoundsException err){
-			log.debug("released key not in pressedKey list in Drawable:" + this.getName());
-		}
-	}	   
 
 	public void createChildObject(Drawable d,int shiftX,int shiftY,boolean inheritanceFlag)
 	{
@@ -281,10 +232,6 @@ public class Drawable extends Sprite implements GameObject,KeyListener,Cloneable
 		
 	}
 	
-	
-	@Override
-	public void keyTyped(KeyEvent e) {	
-	}
 	public void addKeyAction(KeyAction thisKeyAction) {
 		log.info("add new KeyAction to Drawable:" + this.getName() + " action:" + thisKeyAction);
 		this.keyActions.add(thisKeyAction);
