@@ -25,6 +25,7 @@
 	<property name="httpcache-jar" value="httpclient-cache-4.2.1.jar" />
 	<property name="httpcore-jar" value="httpcore-4.2.1.jar" />
 	<property name="httpmime-jar" value="httpmime-4.2.1.jar" />
+	<property name="images-jar" value="images.jar" />
 	
 
 	<!-- Properties derived from the base properties above. Unlikely to change. -->
@@ -107,13 +108,13 @@
 		<mkdir dir="${dist}" />
 		<jar jarfile="${dist}/${base.project.name}.jar" basedir="${classes}">
 			<manifest>
-				<attribute name="Main-Class" value="view.MainView" />
+				<attribute name="Main-Class" value="main.view.Login" />
 			</manifest>
 		</jar>
 	</target>
 
 	<target name="run" depends="jar">
-		<java fork="true" classname="view.MainView">
+		<java fork="true" classname="main.view.Login">
 			<classpath>
 				<path location="${dist}/${base.project.name}.jar" />
 			</classpath>
@@ -124,6 +125,7 @@
 		<echo level="info">Compiling tests...</echo>
 
 		<mkdir dir="${testclasses}" />
+		
 		<javac sourcepath="" debug="true" deprecation="true" destdir="${testclasses}" srcdir="${test}" fork="yes">
 			<classpath refid="test.classpath" />
 			<include name="**/*.java" />
@@ -221,6 +223,7 @@
   ########################################-->
 	<target name="compile-tests" depends="compile">
 		<mkdir dir="${testclasses}" />
+		<unzip src="${src}/${images-jar}" dest="${testclasses}" />
 		<javac sourcepath="" debug="true" deprecation="true" destdir="${testclasses}" srcdir="${test}" fork="yes">
 			<classpath refid="test.classpath" />
 			<include name="**/*.java" />
