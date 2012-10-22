@@ -170,8 +170,8 @@ public class DBConnector {
 			
 			
 			PreparedStatement userSelect = connection.prepareStatement("select * from game");
-			//PreparedStatement delete = connection.prepareStatement("delete from game");
-			//delete.executeUpdate();
+			PreparedStatement delete = connection.prepareStatement("delete from game");
+			delete.executeUpdate();
 			ResultSet rs = userSelect.executeQuery();
 			while(rs.next()) {
 				String username = rs.getString("uname");

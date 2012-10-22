@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import main.actions.PlayAppluseSound;
-import main.actions.PlayBounceSound;
-import main.actions.PlayBrickSound;
-import main.actions.PlayGameOverSound;
 import main.actions.ScoreAction;
 import main.actions.collide.BounceRandomAction;
 import main.actions.collide.CollideBounceAction;
