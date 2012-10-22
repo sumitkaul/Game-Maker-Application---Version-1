@@ -25,7 +25,7 @@ public class ClockDisplay {
 			//sharedClock.setY(5);
 			sharedClock.timeLabel.setForeground(Color.blue);
 			GameBoard.getGameBoard().add(sharedClock.timeLabel);	
-			sharedClock.timeLabel.setVisible(true);
+			sharedClock.timeLabel.setVisible(false);
 
 		}
 		return sharedClock;

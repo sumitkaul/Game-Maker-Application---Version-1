@@ -10,9 +10,12 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -126,8 +129,8 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	{
 		
 		parentObject=parent;
-		//JPanel childPanel = setImagePanel();
-		//this.add(childPanel);
+		JPanel childPanel = setImagePanel();
+		this.add(childPanel);
 		setChooseSprite();
 		parent.setChildConfigurationFrame(this);
 		labelWidth = new JLabel("Width");
@@ -175,6 +178,7 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 
 	
 		buttonCreate = new JButton("Booom!!!");
+		
 
 		this.keyListenerPanel = new KeyListenerPanel();
 		childKeyCode = -1;
@@ -238,9 +242,26 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 		name.setFocusable(true);
 		ArrayList<String> list = new ArrayList<String>();
 		/// Reading from utility
-		JarReader reader = new JarReader();
-		reader.setZipStream("images.jar");
-		list = reader.getAllEntries();
+//		JarReader reader = new JarReader();
+//		reader.setZipStream("images.jar");
+//		list = reader.getAllEntries();
+		
+		ZipInputStream zip;
+		try {
+			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
+			ZipEntry ze = null;
+
+			 while((ze = zip.getNextEntry()) != null) {
+			        String entryName = ze.getName();
+			        log.debug("entryName="+entryName);
+			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
+			            list.add(entryName);
+			        }
+		    }
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 
 	    JPanel namePanel = new JPanel(new GridLayout(5,1));
 	    namePanel.add(new JLabel("Object Name: "));
@@ -256,8 +277,8 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	    for (int i = 0; i < list.size(); i++) {
 	    	final String imagePath = list.get(i);
 	   	 	log.info("The image is " + getClass().getClassLoader().getResource(imagePath));
-	        //final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
-	   	 	final Image image = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
+	        final Image image = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource(imagePath));
+	   	 	//final Image image = new ImageIcon(this.getClass().getResource(imagePath)).getImage();
 			ImageIcon icon = new ImageIcon(image.getScaledInstance(50, 50, 1));
 			final JLabel iconimage = new JLabel(icon);
 			iconimage.setToolTipText(list.get(i));
@@ -308,7 +329,7 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	    setTitle("Choose a image");
 	    setVisible(false);
 	    }
-	    panel.add(imagePanel);
+	    panel.add(imagePanel); 	
 	    
 	   /* layerBox.addActionListener(new ActionListener() {
 		      public void actionPerformed(ActionEvent e) {
@@ -335,10 +356,30 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 	public void actionPerformed(ActionEvent event) {
 
 		String childFile = boxSpriteSelection.getSelectedItem().toString();
+		List<String> list = new ArrayList<String>();
+		String imagePath=null;
 		
-//		JarReader reader = new JarReader();
-//		reader.setZipStream("images.jar");
-//		String jarFilePath = reader.getFileEntry("images/" + childFile);
+		ZipInputStream zip;
+		try {
+			zip = new ZipInputStream((getClass().getClassLoader().getResourceAsStream("images.jar")));
+			ZipEntry ze = null;
+
+			 while((ze = zip.getNextEntry()) != null) {
+			        String entryName = ze.getName();
+			        log.debug("entryName="+entryName);
+			        if(entryName.endsWith(".png") || entryName.endsWith(".jpg") || entryName.endsWith(".gif") ) {
+			            list.add(entryName);
+			        }
+		    }
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		for (int i = 0; i < list.size(); i++){
+			if(list.get(i).equalsIgnoreCase("images/"+childFile+".png"))
+				imagePath = (list.get(i));
+		}
+		//String jarFilePath = reader.getFileEntry("images/" + childFile);
 		String childFilePath = ImageRepo.getInstance().getImagePath(childFile);
 		//log.info("jar file path " + jarFilePath);
 		log.info("child file name " + childFile);
@@ -346,7 +387,7 @@ public class ChildConfigurationFrame extends JFrame implements ActionListener, I
 		if (event.getSource() == buttonCreate)
 		{
 		  	log.debug("buttoncreate created childojects");
-			childObject = new Drawable(Constants.GAMEOBJECT_INTIAL_XVALUE,Constants.GAMEOBJECT_INTIAL_YVALUE, childFilePath);
+			childObject = new Drawable(Constants.GAMEOBJECT_INTIAL_XVALUE,Constants.GAMEOBJECT_INTIAL_YVALUE, imagePath);
 			childObject.setHeight((Integer.parseInt(textHeight.getText())));
 			childObject.setWidth(Integer.parseInt(textWidth.getText()));
 			childObject.setVx(Integer.parseInt(textVelocityX.getText()));

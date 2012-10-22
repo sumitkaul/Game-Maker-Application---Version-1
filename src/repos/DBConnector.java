@@ -130,6 +130,21 @@ public class DBConnector {
 		}
 	}
 	
+	public void saveSignUp(String username,String password, String email,String name) {
+		try {			
+			PreparedStatement insert = connection.prepareStatement("insert into user values(?,?,?,?)");
+			insert.setString(1,username);
+			insert.setString(2, password);
+			insert.setString(3, email);
+			insert.setString(4, name);
+			insert.executeUpdate();
+			log.info("Signup saved to DB !");
+		} catch(SQLException e) {
+			log.error(e);
+		}
+	}
+	
+	
 	public static void main(String args[]) {
 		Connection connection = null;
 		try {
